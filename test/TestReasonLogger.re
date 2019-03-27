@@ -1,2 +1,1 @@
-ReasonLoggerLib.Util.foo();
-print_endline("Add Your Test Cases Here");
+ReasonLoggerLib.Util.runCmd("ls -al");

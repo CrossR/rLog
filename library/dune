@@ -1,4 +1,5 @@
 (library
    (name ReasonLoggerLib)
    (public_name reason-logger.lib)
+   (libraries Rench)
 )
