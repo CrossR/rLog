@@ -9,3 +9,4 @@ _esy/
 reason-logger.install
 .DS_Store
 *.install
+*_junit.xml

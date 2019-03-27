@@ -1,5 +1,12 @@
 (executable
-   (name TestReasonLogger)
-   (public_name TestReasonLogger)
-   (libraries reason-logger.lib )
+   (name RunTests)
+   (public_name RunTests)
+   (modules RunTests)
+   (libraries ReasonLoggerTest)
+)
+(executable
+   (name RunTestsCI)
+   (public_name RunTestsCI)
+   (modules RunTestsCI)
+   (libraries ReasonLoggerTest)
 )
