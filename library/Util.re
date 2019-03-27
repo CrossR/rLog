@@ -27,4 +27,5 @@ let runCmd = (command) => {
   );
 
   close_in(inChannel);
+  lines^
 };
