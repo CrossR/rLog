@@ -1,0 +1,1 @@
+ReasonLogger.Util.foo();
