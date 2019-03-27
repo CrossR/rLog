@@ -4,7 +4,8 @@
   "description": "My Project",
   "esy": { "build": "refmterr dune build -p reason-logger" },
   "scripts": {
-    "test": "esy x TestReasonLogger",
+    "test": "esy x RunTests",
+    "test-ci": "esy x RunTestsCI",
     "run": "esy x ReasonLogger",
     "format": "esy dune build @fmt --auto-promote"
   },

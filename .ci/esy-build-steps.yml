@@ -4,21 +4,27 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '8.9'
-  - script: npm install -g esy@0.4.3
-    displayName: 'npm install -g esy@0.4.3'
+  - script: npm install -g esy@0.5.6
+    displayName: 'npm install -g esy@0.5.6'
   - script: esy install
     displayName: 'esy install'
-  - script: esy pesy
-    displayName: 'esy pesy'
   - script: esy build
     displayName: 'esy build'
-  - script: esy test
-    displayName: 'esy test'
-  - script: esy x ReasonLoggerApp.exe
-    displayName: 'Run the main binary'
-  - script: esy ls-libs
+  - script: esy test-ci
+    displayName: 'esy test-ci'
     continueOnError: true
-    displayName: 'Show all libraries including this package lib'
-  - script: esy release
-    displayName: 'Test Creation of Prebuilt Binary Releases'
-    continueOnError: true
+  - task: PublishTestResults@2
+    displayName: 'Publish JUnit file'
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: '**/*junit.xml'
+      buildPlatform: ${{ parameters.platform }}
+      testRunTitle: ${{ parameters.platform }}
+      failTaskOnFailedTests: true
+  - script: esy format
+    displayName: esy format
+  - script: git diff --exit-code
+    displayName: 'Check formatting, run esy format if fails.'
+  # - script: esy release
+  #   displayName: 'Test Creation of Prebuilt Binary Releases'
+  #   continueOnError: true
