@@ -3,39 +3,18 @@
   "version": "0.0.0",
   "description": "My Project",
   "esy": {
-    "build": "pesy",
-    "release": {
-      "releasedBinaries": [
-        "ReasonLoggerApp.exe"
-      ]
-    }
-  },
-  "buildDirs": {
-    "test": {
-      "require": ["reason-logger.lib"],
-      "main": "TestReasonLogger",
-      "name": "TestReasonLogger.exe"
-    },
-    "library": {
-      "name": "reason-logger.lib",
-      "namespace": "ReasonLogger"
-    },
-    "executable": {
-      "require": ["reason-logger.lib"],
-      "main": "ReasonLoggerApp",
-      "name": "ReasonLoggerApp.exe"
-    }
+    "build": "refmterr dune build -p reason-logger"
   },
   "scripts": {
-    "pesy": "bash -c 'env PESY_MODE=update pesy'",
-    "test": "esy x TestReasonLogger.exe"
+    "test": "esy x TestReasonLogger",
+    "run": "esy x ReasonLogger",
+    "format": "esy dune build @fmt --auto-promote"
   },
   "dependencies": {
     "@opam/dune": ">=1.6.0",
     "@esy-ocaml/reason": "*",
     "refmterr": "*",
-    "ocaml": "^4.4.0",
-    "pesy": "*"
+    "ocaml": "^4.4.0"
   },
   "devDependencies": {
     "@opam/merlin": "*"
