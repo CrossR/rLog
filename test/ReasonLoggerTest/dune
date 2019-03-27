@@ -2,5 +2,5 @@
     (name ReasonLoggerTest)
     (library_flags (-linkall -g))
     (modules (:standard))
-    (libraries rely.lib console.lib reason-logger.lib)
+    (libraries rely.lib console.lib ReasonLoggerLib)
 )

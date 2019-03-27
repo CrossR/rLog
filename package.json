@@ -2,7 +2,7 @@
   "name": "reason-logger",
   "version": "0.0.0",
   "description": "My Project",
-  "esy": { "build": "refmterr dune build -p reason-logger" },
+  "esy": { "build": "refmterr dune build -p ReasonLoggerLib" },
   "scripts": {
     "test": "esy x RunTests",
     "test-ci": "esy x RunTestsCI",

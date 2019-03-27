@@ -3,28 +3,6 @@
 
 [![CircleCI](https://circleci.com/gh/yourgithubhandle/reason-logger/tree/master.svg?style=svg)](https://circleci.com/gh/yourgithubhandle/reason-logger/tree/master)
 
-
-**Contains the following libraries and executables:**
-
-```
-reason-logger@0.0.0
-│
-├─test/
-│   name:    TestReasonLogger.exe
-│   main:    TestReasonLogger
-│   require: reason-logger.lib
-│
-├─library/
-│   library name: reason-logger.lib
-│   namespace:    ReasonLogger
-│   require:
-│
-└─executable/
-    name:    ReasonLoggerApp.exe
-    main:    ReasonLoggerApp
-    require: reason-logger.lib
-```
-
 ## Developing:
 
 ```
@@ -39,7 +17,7 @@ esy build
 After building the project, you can run the main binary that is produced.
 
 ```
-esy x ReasonLoggerApp.exe 
+esy run
 ```
 
 ## Running Tests:
