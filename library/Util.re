@@ -9,15 +9,16 @@ let parseLine = (printToScreen, line, lines) => {
 };
 
 let wrapCommand = command => {
-  command ++ " 2>&1";
+  command
 };
 
 let runCmd = (~printToScreen=true, command) => {
-  let inChannel = wrapCommand(command) |> Unix.open_process_in;
-  let lines = ref([]);
+  let (pOut, pIn, pErr) = Unix.open_process_full(wrapCommand(command), [||]);
+
+  let outLines = ref([]);
 
   Stream.from(_ =>
-    switch (input_line(inChannel)) {
+    switch (input_line(pOut)) {
     | line => Some(line)
     | exception End_of_file => None
     }
@@ -25,12 +26,28 @@ let runCmd = (~printToScreen=true, command) => {
   |> (
     stream =>
       try (
-        Stream.iter(line => parseLine(printToScreen, line, lines), stream)
+        Stream.iter(line => parseLine(printToScreen, line, outLines), stream)
       ) {
-      | _error => close_in(inChannel)
+      | _error => close_in(pOut)
       }
   );
 
-  close_in(inChannel);
-  lines^;
+  Stream.from(_ =>
+    switch (input_line(pErr)) {
+    | line => Some(line)
+    | exception End_of_file => None
+    }
+  )
+  |> (
+    stream =>
+      try (
+        Stream.iter(line => parseLine(printToScreen, line, outLines), stream)
+      ) {
+      | _error => close_in(pErr)
+      }
+  );
+
+  close_in(pOut);
+  close_in(pErr);
+  outLines^;
 };

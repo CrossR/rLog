@@ -20,7 +20,7 @@ describe("Test basic process launching", ({test, _}) => {
 
   test("Can launch a basic process and get both stdout and stderr", ({expect}) => {
     let cmd = "bash " ++ Unix.getcwd() ++ "/test/assets/std_err.sh";
-    let result = ReasonLoggerLib.Util.runCmd(~printToScreen=false, cmd);
+    let result = ReasonLoggerLib.Util.runCmd(~printToScreen=true, cmd);
 
     let expectedResult = List.rev(range(1, 50));
 
