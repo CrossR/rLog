@@ -4,7 +4,7 @@ let rec range = (i, j) =>
   if (i > j) {
     [];
   } else {
-    [string_of_int(i), ...range(i - 1, j)];
+    [string_of_int(i), ...range(i + 1, j)];
   };
 
 describe("Test basic process launching", ({test, _}) => {
