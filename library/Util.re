@@ -1,53 +1,23 @@
-let foo = () => print_endline("Hello");
+/*
+ * Util.re
+ *
+ * Various utilities to help out both logging and running commands.
+ */
 
-let parseLine = (printToScreen, line, lines) => {
-  if (printToScreen) {
-    Console.log(line);
+let join = paths => {
+  let sep = Filename.dir_sep;
+  let (head, rest) =
+    switch (paths) {
+    | [] => ("", [])
+    | [head, ...rest] => (head, rest)
+    };
+  List.fold_left((accum, p) => accum ++ sep ++ p, head, rest);
+};
+
+let getHome = () => {
+  switch (Sys.getenv_opt("HOME"), Sys.os_type) {
+  | (Some(dir), _) => dir
+  | (None, "Win32") => Sys.getenv("LOCALAPPDATA")
+  | (None, _) => ""
   };
-
-  lines := [line, ...lines^];
-};
-
-let wrapCommand = command => {
-  command
-};
-
-let runCmd = (~printToScreen=true, command) => {
-  let (pOut, pIn, pErr) = Unix.open_process_full(wrapCommand(command), [||]);
-
-  let outLines = ref([]);
-
-  Stream.from(_ =>
-    switch (input_line(pOut)) {
-    | line => Some(line)
-    | exception End_of_file => None
-    }
-  )
-  |> (
-    stream =>
-      try (
-        Stream.iter(line => parseLine(printToScreen, line, outLines), stream)
-      ) {
-      | _error => close_in(pOut)
-      }
-  );
-
-  Stream.from(_ =>
-    switch (input_line(pErr)) {
-    | line => Some(line)
-    | exception End_of_file => None
-    }
-  )
-  |> (
-    stream =>
-      try (
-        Stream.iter(line => parseLine(printToScreen, line, outLines), stream)
-      ) {
-      | _error => close_in(pErr)
-      }
-  );
-
-  close_in(pOut);
-  close_in(pErr);
-  outLines^;
 };
