@@ -24,14 +24,12 @@ let getHome = () => {
   };
 };
 
-let makeAbsolutePath = path => {
-    if (String.get(path, 0) == '~') {
-        Str.replace_first(Str.regexp("~"), getHome(), path)
-    } else {
-        path
-    };
-};
-
+let makeAbsolutePath = path =>
+  if (path.[0] == '~') {
+    Str.replace_first(Str.regexp("~"), getHome(), path);
+  } else {
+    path;
+  };
 
 let makeFolder = path => {
   Unix.mkdir(path, 0o755);
