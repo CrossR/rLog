@@ -36,7 +36,7 @@ let make = (configPath) => {
   };
 };
 
-let getConfig = (configPath, ()) => {
+let getConfig = (configPath) => {
   let config = make(configPath);
 
   if (config == default) {
