@@ -15,9 +15,17 @@ type t = {
 };
 
 let default = {
-  outputPath: "~/reasonLoggerOut/",
+  outputPath: "~/reasonLoggerOut",
   commandsToRun: [],
   loadLocalCommands: false,
+};
+
+let defaultJsonString = {
+  {|{
+    "outputPath": "~/reasonLoggerOut",
+    "commandsToRun": [],
+    "loadLocalCommands": false
+}|};
 };
 
 let getConfigLocation = () =>
@@ -26,8 +34,17 @@ let getConfigLocation = () =>
   | _ => Util.join([Util.getHome(), ".config", "reasonLogger", "config.json"])
   };
 
-let make = configPath => {
+let saveConfig = (configPath, config) =>
+  Yojson.Safe.to_file(configPath, config);
+
+let loadConfig = configPath => {
   let configPath = configPath != "" ? configPath : getConfigLocation();
+
+  if (configPath != "" && !Sys.file_exists(configPath)) {
+    let defaultJson = Yojson.Safe.from_string(defaultJsonString);
+    Yojson.Safe.to_file(configPath, defaultJson);
+  };
+
   switch (Yojson.Safe.from_file(configPath) |> of_yojson) {
   | Ok(config) => config
   | Error(loc) =>
@@ -37,7 +54,7 @@ let make = configPath => {
 };
 
 let getConfig = configPath => {
-  let config = make(configPath);
+  let config = loadConfig(configPath);
 
   if (config == default) {
     Console.warn("Using default config...");
