@@ -1,1 +1,1 @@
-ReasonLoggerLib.Util.runCmd("ls -al");
+ReasonLoggerLib.Command.runCmd("ls -al");
