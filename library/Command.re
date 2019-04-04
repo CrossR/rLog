@@ -18,7 +18,10 @@ let wrapCommand = command => {
 
 let runCmd = (~printToScreen=true, ~logCommand=true, ~configPath="", command) => {
   let inChannel =
-    (logCommand ? Logging.logCommand(command, configPath) : wrapCommand(command))
+    (
+      logCommand
+        ? Logging.logCommand(command, configPath) : wrapCommand(command)
+    )
     |> Unix.open_process_in;
   let lines = ref([]);
 

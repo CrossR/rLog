@@ -26,7 +26,7 @@ let getConfigLocation = () =>
   | _ => Util.join([Util.getHome(), ".config", "reasonLogger", "config.json"])
   };
 
-let make = (configPath) => {
+let make = configPath => {
   let configPath = configPath != "" ? configPath : getConfigLocation();
   switch (Yojson.Safe.from_file(configPath) |> of_yojson) {
   | Ok(config) => config
@@ -36,12 +36,12 @@ let make = (configPath) => {
   };
 };
 
-let getConfig = (configPath) => {
+let getConfig = configPath => {
   let config = make(configPath);
 
   if (config == default) {
     Console.warn("Using default config...");
   };
 
-    config
+  config;
 };

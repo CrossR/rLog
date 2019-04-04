@@ -5,11 +5,11 @@
  */
 open Config;
 
-let getLogFile = (configPath) => {
+let getLogFile = configPath => {
   let config = Config.getConfig(configPath);
-  
+
   /* Add timestamp etc */
-  Util.join([config.outputPath, "out.log"])
+  Util.join([config.outputPath, "out.log"]);
 };
 
 let logCommand = (command, configPath) => {
