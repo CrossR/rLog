@@ -6,9 +6,15 @@
 open Config;
 
 let getLogFile = configPath => {
+  /*
+   * TODO here:
+   *  - Add timestamp
+   *  - Decide on folder structure + make it
+   */
   let config = Config.getConfig(configPath);
 
-  /* Add timestamp etc */
+  Util.checkFolderExists(config.outputPath);
+
   Util.join([config.outputPath, "out.log"]);
 };
 
