@@ -8,25 +8,25 @@ open Config;
 let padDate = str =>
   Util.leftPadString(~inputString=str, ~len=2, ~padding="0");
 
-let getDate = (~currentTime=Unix.gmtime(Unix.time()), ()) => {
-  string_of_int(currentTime.tm_year + 1900)
+let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
+  string_of_int(time.tm_year + 1900)
   ++ "-"
-  ++ padDate(string_of_int(currentTime.tm_mon + 1))
+  ++ padDate(string_of_int(time.tm_mon + 1))
   ++ "-"
-  ++ padDate(string_of_int(currentTime.tm_mday + 1));
+  ++ padDate(string_of_int(time.tm_mday));
 };
 
-let getTime = (~currentTime=Unix.gmtime(Unix.time()), ()) => {
-  padDate(string_of_int(currentTime.tm_hour))
+let getTime = (~time=Unix.gmtime(Unix.time()), ()) => {
+  padDate(string_of_int(time.tm_hour))
   ++ ":"
-  ++ padDate(string_of_int(currentTime.tm_min))
+  ++ padDate(string_of_int(time.tm_min))
   ++ ":"
-  ++ padDate(string_of_int(currentTime.tm_sec));
+  ++ padDate(string_of_int(time.tm_sec));
 };
 
 let getFormattedTime = (~time=Unix.time(), ()) => {
-  let currentTime = Unix.gmtime(time);
-  getDate(~currentTime, ()) ++ "T" ++ getTime(~currentTime, ()) ++ "Z";
+  let time = Unix.gmtime(time);
+  getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
 };
 
 let getLogFile = config => {

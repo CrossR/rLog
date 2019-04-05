@@ -1,11 +1,5 @@
 open TestFramework;
-
-let rec range = (i, j) =>
-  if (i > j) {
-    [];
-  } else {
-    [string_of_int(i), ...range(i + 1, j)];
-  };
+open TestUtils;
 
 describe("Test basic process launching", ({test, _}) => {
   test("Can launch a basic process and get output", ({expect}) => {
