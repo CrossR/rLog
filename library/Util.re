@@ -48,3 +48,12 @@ let checkFolderExists = path => {
   | _ => ()
   };
 };
+
+let leftPadString = (~inputString, ~len, ~padding) => {
+  let paddedString = ref(inputString);
+  while (String.length(paddedString^) < len) {
+    paddedString := padding ++ paddedString^;
+  };
+
+  paddedString^;
+};

@@ -5,20 +5,23 @@
  */
 open Config;
 
+let padDate = str =>
+  Util.leftPadString(~inputString=str, ~len=2, ~padding="0");
+
 let getDate = (currentTime: Unix.tm) => {
-  string_of_int(currentTime.tm_year)
+  string_of_int(currentTime.tm_year + 1900)
   ++ "-"
-  ++ string_of_int(currentTime.tm_mon + 1)
+  ++ padDate(string_of_int(currentTime.tm_mon + 1))
   ++ "-"
-  ++ string_of_int(currentTime.tm_mday);
+  ++ padDate(string_of_int(currentTime.tm_mday + 1));
 };
 
 let getTime = (currentTime: Unix.tm) => {
-  string_of_int(currentTime.tm_hour)
+  padDate(string_of_int(currentTime.tm_hour))
   ++ ":"
-  ++ string_of_int(currentTime.tm_min)
+  ++ padDate(string_of_int(currentTime.tm_min))
   ++ ":"
-  ++ string_of_int(currentTime.tm_sec);
+  ++ padDate(string_of_int(currentTime.tm_sec));
 };
 
 let getTimeStep = () => {
@@ -33,9 +36,12 @@ let getLogFile = configPath => {
    */
   let config = Config.getConfig(configPath);
 
+  let outputFolder =
+    Util.join([config.outputPath, getDate(Unix.gmtime(Unix.time()))]);
   Util.checkFolderExists(config.outputPath);
+  Util.checkFolderExists(outputFolder);
 
-  Util.join([config.outputPath, getTimeStep() ++ ".log"]);
+  Util.join([outputFolder, getTimeStep() ++ ".log"]);
 };
 
 let logCommand = (command, configPath) => {
