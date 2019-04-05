@@ -29,13 +29,7 @@ let getTimeStep = () => {
   getDate(currentTime) ++ "T" ++ getTime(currentTime) ++ "Z";
 };
 
-let getLogFile = configPath => {
-  /*
-   * TODO here:
-   *  - Decide on folder structure + make it
-   */
-  let config = Config.getConfig(configPath);
-
+let getLogFile = config => {
   let outputFolder =
     Util.join([config.outputPath, getDate(Unix.gmtime(Unix.time()))]);
   Util.checkFolderExists(config.outputPath);

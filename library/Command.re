@@ -38,11 +38,10 @@ let runCmd = (~printToScreen=true, ~logCommand=true, ~configPath="", command) =>
    *  - The metadata one, with the command ran, error code, logger commands from
    *    the config file, any extra commands logged as in the parseLine func.
    */
+  let config = Config.getConfig(configPath);
+
   let inChannel =
-    (
-      logCommand
-        ? Logging.logCommand(command, configPath) : wrapCommand(command)
-    )
+    (logCommand ? Logging.logCommand(command, config) : wrapCommand(command))
     |> Unix.open_process_in;
 
   let lines = ref([]);
