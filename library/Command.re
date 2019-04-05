@@ -23,7 +23,8 @@ let wrapCommand = command => {
   command ++ " 2>&1";
 };
 
-let runCmd = (~printToScreen=true, ~logCommand=true, ~configPath="", command) => {
+let runCmd =
+    (~printToScreen=true, ~logCommand=true, ~config=Config.default, command) => {
   /*
    * Write a top level runner, that will launch this function, as well as all
    * the result of the stuff that is discussed here. Once that is done, I
@@ -42,8 +43,6 @@ let runCmd = (~printToScreen=true, ~logCommand=true, ~configPath="", command) =>
    *  - The metadata one, with the command ran, error code, logger commands from
    *    the config file, any extra commands logged as in the parseLine func.
    */
-  let config = Config.getConfig(configPath);
-
   let inChannel =
     (logCommand ? Logging.logCommand(command, config) : wrapCommand(command))
     |> Unix.open_process_in;

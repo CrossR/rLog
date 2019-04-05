@@ -1,6 +1,6 @@
 {
   "name": "reason-logger",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "My Project",
   "esy": { "build": "refmterr dune build -p ReasonLoggerLib" },
   "scripts": {

@@ -5,12 +5,18 @@
  */
 
 type t = {
-    showHelp: ref(bool)
-}
+  showHelp: ref(bool),
+  verbose: ref(bool),
+  configPath: ref(string),
+  restOfCLI: ref(string),
+};
 
 let default = {
-    showHelp: ref(false)
-}
+  showHelp: ref(false),
+  verbose: ref(false),
+  configPath: ref(""),
+  restOfCLI: ref(""),
+};
 
 let helpText = {|
 reasonLogger 0.0.1
@@ -29,19 +35,31 @@ model parameters, as well as using `git` commands and more as additional
 logging, to store the state of the code for a given data output.
 
 Flags:
-|}
+|};
 
-let argList = (cliObj) => {
-    [("-h", Arg.Set(cliObj.showHelp), "Show this help text.")];
-}
+let argList = cliObj => {
+  [
+    ("-h", Arg.Set(cliObj.showHelp), "Show this help text."),
+    ("-v", Arg.Set(cliObj.verbose), "Enable verbose mode."),
+    (
+      "--config",
+      Arg.Set_string(cliObj.configPath),
+      "Provide a custom configuration file location.",
+    ),
+  ];
+};
 
 let getArgs = () => {
-    let cliObj = default;
-    Arg.parse(argList(cliObj), (x) => raise(Arg.Bad("Bad argument: " ++ x)), helpText)
+  let cliObj = default;
+  Arg.parse(
+    argList(cliObj),
+    x => raise(Arg.Bad("Bad argument: " ++ x)),
+    helpText,
+  );
 
-    if (cliObj.showHelp^) {
-        Arg.usage(argList(cliObj), helpText);
-    }
+  if (cliObj.showHelp^) {
+    Arg.usage(argList(cliObj), helpText);
+  };
 
-    cliObj
-}
+  cliObj;
+};
