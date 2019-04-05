@@ -25,6 +25,10 @@ let wrapCommand = command => {
 
 let runCmd = (~printToScreen=true, ~logCommand=true, ~configPath="", command) => {
   /*
+   * Write a top level runner, that will launch this function, as well as all
+   * the result of the stuff that is discussed here. Once that is done, I
+   * should pass this a config object, rather than a path.
+   *
    * Just before we start the command, we should load the config in, and then
    * start up and commands that are supposed to be run.
    *
