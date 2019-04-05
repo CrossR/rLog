@@ -1,6 +1,16 @@
+/*
+ * ReasonLogger.re
+ * 
+ * Main entry point for the CLI app.
+ */
+
 let logAndRun = () => {
-  let cmd = "/home/ryan/test.sh";
   let args = ReasonLoggerLib.Cli.getArgs();
+  let logMsg = (message) => args.verbose^ ? Console.log(message) : ();
+
+  logMsg("Full passed arguments are: ")
+  logMsg(args);
+
   let finished = ref(false);
 
   if (args.showHelp^) {
@@ -8,7 +18,12 @@ let logAndRun = () => {
   };
 
   if (! finished^) {
+    logMsg("Loading config...")
     let config = ReasonLoggerLib.Config.getConfig(args.configPath^);
+    let cmd = String.concat(" ", args.restOfCLI^);
+    logMsg("Command to be run is: " ++ cmd)
+
+    logMsg("Staring command runner...")
     let _ =
       ReasonLoggerLib.Command.runCmd(
         ~printToScreen=true,
