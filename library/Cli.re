@@ -48,7 +48,9 @@ let argList = cliObj => {
     ),
     (
       "--",
-      Arg.Rest(arg => cliObj.restOfCLI := List.append(cliObj.restOfCLI^, [arg])),
+      Arg.Rest(
+        arg => cliObj.restOfCLI := List.append(cliObj.restOfCLI^, [arg]),
+      ),
       "Stop parsing CLI flags and treat the rest of the command as input for the command to run.",
     ),
   ];

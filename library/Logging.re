@@ -30,8 +30,7 @@ let getFormattedTime = (~time=Unix.time(), ()) => {
 };
 
 let getLogFile = config => {
-  let outputFolder =
-    Util.join([config.outputPath, getDate()]);
+  let outputFolder = Util.join([config.outputPath, getDate()]);
   Util.checkFolderExists(config.outputPath);
   Util.checkFolderExists(outputFolder);
 
