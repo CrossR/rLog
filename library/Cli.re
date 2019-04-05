@@ -8,14 +8,14 @@ type t = {
   showHelp: ref(bool),
   verbose: ref(bool),
   configPath: ref(string),
-  restOfCLI: ref(string),
+  restOfCLI: ref(list(string)),
 };
 
 let default = {
   showHelp: ref(false),
   verbose: ref(false),
   configPath: ref(""),
-  restOfCLI: ref(""),
+  restOfCLI: ref([]),
 };
 
 let helpText = {|
@@ -46,6 +46,11 @@ let argList = cliObj => {
       Arg.Set_string(cliObj.configPath),
       "Provide a custom configuration file location.",
     ),
+    (
+      "--",
+      Arg.Rest(arg => cliObj.restOfCLI := List.append(cliObj.restOfCLI^, [arg])),
+      "Stop parsing CLI flags and treat the rest of the command as input for the command to run.",
+    ),
   ];
 };
 
@@ -53,7 +58,7 @@ let getArgs = () => {
   let cliObj = default;
   Arg.parse(
     argList(cliObj),
-    x => raise(Arg.Bad("Bad argument: " ++ x)),
+    x => raise(Arg.Bad("Unknown argument: " ++ x)),
     helpText,
   );
 
