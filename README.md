@@ -15,10 +15,10 @@ the environment at the time of the simulation.
 
 For example:
 
-    - `echo` out environment variables to check library versions.
-    - `git` commands to get the current commit and `diff` of the repository.
-    - Dumping out the current contents of a configuration file.
-    - Status of input files.
+ - `echo` out environment variables to check library versions.
+ - `git` commands to get the current commit and `diff` of the repository.
+ - Dumping out the current contents of a configuration file.
+ - Status of input files.
 
 ## Configuration
 
@@ -35,10 +35,10 @@ Configuration is achieved with a `config.json` in `~/.config/reasonLogger/`:
 
 Where:
 
-    - `outputPath` is the folder log files will be stored in.
-    - `commandsToRun` is the additional logging commands to run.
-    - `localLocalCommands` enables the ability to use a per project config file. **TODO**.
-    - `valuesToLog` is a list of strings that appear at the start of output
+ - `outputPath` is the folder log files will be stored in.
+ - `commandsToRun` is the additional logging commands to run.
+ - `localLocalCommands` enables the ability to use a per project config file. **TODO**.
+ - `valuesToLog` is a list of strings that appear at the start of output
     that is especially important to log. For example `echo "@LOG@: Cosmics
     disabled"` will cause `Cosmics disabled` to appear in the metadata log
     file separately, so it is more easily found. These values can be printed
@@ -52,14 +52,14 @@ Usage should just be `reasonLogger -- commandToRun` (**Once I've made a binary r
 
 Stuff to do:
 
-    - Make a release, so I have a binary.
-    - Return the ran commands status code.
-    - Implement the project specific config.
-    - Add a search command (to dump out all commands, for use with FZF etc).
-    - Add command to get a link to the most recent config (so then I can do
+ - Make a release, so I have a binary.
+ - Return the ran commands status code.
+ - Implement the project specific config.
+ - Add a search command (to dump out all commands, for use with FZF etc).
+ - Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `reasonLogger link` and have a link to the
     log file in the data location too).
-    - Add a variable syntax to the commands (so I can define dynamic
+ - Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
-    - Check if I can get this running on Windows (not a priority since none
+ - Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).
