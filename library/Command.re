@@ -87,5 +87,8 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
 
 let runMultipleCommand = (~config, listOfCommands: list(string)) => {
   let parMapList = Parmap.L(listOfCommands);
-  Parmap.parmapi((i, c) => runCmd(~config, ~runSilently=i != 0, c), parMapList);
+  Parmap.parmapi(
+    (i, c) => runCmd(~config, ~runSilently=i != 0, c),
+    parMapList,
+  );
 };

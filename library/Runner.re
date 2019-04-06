@@ -34,6 +34,6 @@ let start = (args, logMsg) => {
   List.iter(c => logMsg("    " ++ c), cmds);
 
   logMsg("Staring command runner...");
-  let _ = Command.runMultipleCommand(~config, cmds);
-  ();
+  let commandOutputs = Command.runMultipleCommand(~config, cmds);
+  Logging.makeLogFile(commandOutputs, config, logMsg);
 };

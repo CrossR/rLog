@@ -29,10 +29,35 @@ let getFormattedTime = (~time=Unix.time(), ()) => {
   getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
 };
 
-let getLogFile = config => {
-  let outputFolder = Util.join([config.outputPath, getDate()]);
+let getLogFile = (job, config) => {
+  let outputFolder =
+    Util.makeAbsolutePath(Util.join([config.outputPath, getDate()]));
+
   Util.checkFolderExists(config.outputPath);
   Util.checkFolderExists(outputFolder);
 
-  Util.join([outputFolder, getFormattedTime() ++ ".log"]);
+  Util.join([outputFolder, job ++ "_" ++ getFormattedTime() ++ ".log"]);
+};
+
+let writeFile = (path, stringList) => {
+  let fileOut = open_out(path);
+
+  let rec writeStringListToFile = outputChannel =>
+    fun
+    | [] => ()
+    | [line, ...restOfList] => {
+        Printf.fprintf(outputChannel, "%s\n", line);
+        writeStringListToFile(outputChannel, restOfList);
+      };
+
+  writeStringListToFile(fileOut, stringList);
+};
+
+let makeLogFile = (output: list(Command.t), config, logMsg) => {
+  let mainLogFile = getLogFile("cmd", config);
+  logMsg("Logging command output to " ++ mainLogFile);
+  let metadataLogFile = getLogFile("meta", config);
+  logMsg("Logging command metadata to " ++ metadataLogFile);
+
+  writeFile(mainLogFile, List.nth(output, 0).outputLines);
 };
