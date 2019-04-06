@@ -4,19 +4,53 @@
  * Functions related to running a command and saving its output.
  */
 
-let parseLine = (runSilently, line, lines) => {
+type t = {
+  mutable outputLines: list(string),
+  mutable linesOfInterest: list(string),
+};
+
+let default = () => {outputLines: [], linesOfInterest: []};
+
+let parseLine = (runSilently, line, commandOutput) => {
   /*
-   * Decide if this is needed.
-   * Potentially, could use this for some in proc monitoring.
-   * That is, add a unique key to commands say [@LOG@]:
-   * and those commands are logged differently.
-   *
+   * Parse a line for printing and storing.
    */
+
   if (!runSilently) {
     Console.log(line);
   };
 
-  lines := [line, ...lines^];
+  commandOutput.outputLines = List.append(commandOutput.outputLines, [line]);
+};
+
+let checkForLinesOfInterest = (commandOutput, valuesToLog) => {
+  /*
+   * Parse all the lines of the command to find any of special interest.
+   */
+
+  let linesOfInterest = ref([]);
+  let formattedLines = ref([]);
+
+  for (i in 0 to List.length(commandOutput.outputLines) - 1) {
+    let line = ref(List.nth(commandOutput.outputLines, i));
+
+    for (j in 0 to List.length(valuesToLog) - 1) {
+      let currentRegex = Str.regexp(Str.quote(List.nth(valuesToLog, j)));
+
+      if (Str.string_match(currentRegex, line^, 0)) {
+        let subStart = Str.match_end();
+        line := String.sub(line^, subStart, String.length(line^) - subStart);
+        linesOfInterest := List.append(linesOfInterest^, [line^]);
+      };
+    };
+
+    formattedLines := List.append(formattedLines^, [line^]);
+  };
+
+  commandOutput.outputLines = formattedLines^;
+  commandOutput.linesOfInterest = linesOfInterest^;
+
+  commandOutput;
 };
 
 let wrapCommand = command => {
@@ -49,7 +83,7 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
     )
     |> Unix.open_process_in;
 
-  let lines = ref([]);
+  let commandOutput = default();
 
   Stream.from(_ =>
     switch (input_line(inChannel)) {
@@ -59,11 +93,17 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   )
   |> (
     stream =>
-      try (Stream.iter(line => parseLine(runSilently, line, lines), stream)) {
+      try (
+        Stream.iter(
+          line => parseLine(runSilently, line, commandOutput),
+          stream,
+        )
+      ) {
       | _error => close_in(inChannel)
       }
   );
 
   close_in(inChannel);
-  lines^;
+
+  checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
 };

@@ -12,19 +12,23 @@ type t = {
   commandsToRun: list(string),
   [@key "loadLocalCommands"]
   loadLocalCommands: bool,
+  [@key "valuesToLog"]
+  valuesToLog: list(string),
 };
 
 let default = {
   outputPath: "~/reasonLoggerOut",
   commandsToRun: [],
   loadLocalCommands: false,
+  valuesToLog: ["@LOG@: "],
 };
 
 let defaultJsonString = {
   {|{
     "outputPath": "~/reasonLoggerOut",
     "commandsToRun": [],
-    "loadLocalCommands": false
+    "loadLocalCommands": false,
+    "valuesToLog": ["@LOG@: "]
 }|};
 };
 
