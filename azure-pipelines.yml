@@ -15,10 +15,9 @@ jobs:
     ESY__CACHE_SOURCE_TARBALL_PATH: /home/vsts/.esy/source/i
 
   steps:
-  # TODO: Uncomment both this and 'publish-build-cache' below to enable build caching for Linux.
-  # - template: .ci/restore-build-cache.yml
+  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
-  # - template: .ci/publish-build-cache.yml
+  - template: .ci/publish-build-cache.yml
 
 - job: MacOS
   timeoutInMinutes: 0
@@ -30,10 +29,9 @@ jobs:
     ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
 
   steps:
-  # TODO: Uncomment both this and 'publish-build-cache' below to enable build caching for Mac.
-  # - template: .ci/restore-build-cache.yml
+  - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
-  # - template: .ci/publish-build-cache.yml
+  - template: .ci/publish-build-cache.yml
 
 - job: Windows
   timeoutInMinutes: 0
@@ -48,20 +46,3 @@ jobs:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
   - template: .ci/publish-build-cache.yml
-
-- job: Release
-  timeoutInMinutes: 0
-  displayName: Release
-  dependsOn:
-      - Linux
-      - MacOS
-      - Windows
-  condition: succeeded()
-  pool:
-     vmImage: ubuntu-16.04
-  steps:
-    - task: PublishBuildArtifacts@1
-      displayName: 'Release Package'
-      inputs:
-          PathtoPublish: '.'
-          ArtifactName: npm-package
