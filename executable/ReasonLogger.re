@@ -19,8 +19,8 @@ let logAndRun = () => {
 
   if (! finished^) {
     let _ = ReasonLoggerLib.Runner.start(args, logMsg);
+    ();
   };
-
   /* I should return the main command error code here */
 };
 

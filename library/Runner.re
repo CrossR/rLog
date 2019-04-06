@@ -19,5 +19,5 @@ let start = (args, logMsg) => {
   let commandOutputs = Command.runMultipleCommand(~config, cmds);
   Logging.makeLogFile(commandOutputs, config, logMsg);
 
-  List.nth(commandOutputs, 0).status
+  List.nth(commandOutputs, 0).status;
 };
