@@ -18,16 +18,8 @@ let logAndRun = () => {
   };
 
   if (! finished^) {
-    logMsg("Loading config...");
-    let config = ReasonLoggerLib.Config.getConfig(args.configPath^);
-    let cmd = String.concat(" ", args.restOfCLI^);
-    logMsg("Command to be run is: " ++ cmd);
-
-    logMsg("Staring command runner...");
-    let _ = ReasonLoggerLib.Command.runCmd(~config, cmd);
-    ();
+    ReasonLoggerLib.Runner.start(args, logMsg);
   };
-
   ();
 };
 

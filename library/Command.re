@@ -58,24 +58,7 @@ let wrapCommand = command => {
 };
 
 let runCmd = (~runSilently=false, ~config=Config.default, command) => {
-  /*
-   * Write a top level runner, that will launch this function, as well as all
-   * the result of the stuff that is discussed here. Once that is done, I
-   * should pass this a config object, rather than a path.
-   *
-   * Just before we start the command, we should load the config in, and then
-   * start up and commands that are supposed to be run.
-   *
-   * This should be done in a thread to not block, and return back a list of strings?
-   * Maybe a list of commandoutput types?
-   *
-   * This can then be combined with the other output to produce a final output file.
-   *
-   * I see two output files:
-   *  - Command output file, direct from tee.
-   *  - The metadata one, with the command ran, error code, logger commands from
-   *    the config file, any extra commands logged as in the parseLine func.
-   */
+
   let inChannel =
     (
       !runSilently
@@ -106,4 +89,9 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   close_in(inChannel);
 
   checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
+};
+
+let runMultipleCommand = (~config, listOfCommands: list(string)) => {
+  let parMapList = Parmap.L(listOfCommands);
+  Parmap.parmapi((i, c) => runCmd(~config, c), parMapList);
 };
