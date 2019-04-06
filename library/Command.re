@@ -5,12 +5,18 @@
  */
 
 type t = {
+  command: string,
   mutable outputLines: list(string),
   mutable linesOfInterest: list((int, string)),
   mutable status: option(Unix.process_status),
 };
 
-let default = () => {outputLines: [], linesOfInterest: [], status: None};
+let default = command => {
+  command,
+  outputLines: [],
+  linesOfInterest: [],
+  status: None,
+};
 
 let parseLine = (runSilently, line, commandOutput) => {
   /*
@@ -61,7 +67,7 @@ let wrapCommand = command => {
 let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   let inChannel = wrapCommand(command) |> Unix.open_process_in;
 
-  let commandOutput = default();
+  let commandOutput = default(command);
 
   Stream.from(_ =>
     switch (input_line(inChannel)) {

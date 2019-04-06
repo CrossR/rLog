@@ -57,3 +57,19 @@ let leftPadString = (~inputString, ~len, ~padding) => {
 
   paddedString^;
 };
+
+let processMessage = (status: option(Unix.process_status)) => {
+  switch (status) {
+  | Some(WEXITED(code)) => "Exit Code: " ++ string_of_int(code)
+  | Some(WSIGNALED(code)) =>
+    "Exit (via signal) Code: " ++ string_of_int(code)
+  | Some(WSTOPPED(code)) => "Stop Code: " ++ string_of_int(code)
+  | None => "NO ERROR CODE"
+  };
+};
+
+let rec combineLists = listOfLists =>
+  switch (listOfLists) {
+  | [] => []
+  | [l, ...rest] => List.append(l, combineLists(rest))
+  };
