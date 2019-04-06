@@ -58,12 +58,7 @@ let wrapCommand = command => {
 };
 
 let runCmd = (~runSilently=false, ~config=Config.default, command) => {
-  let inChannel =
-    (
-      !runSilently
-        ? Logging.logCommand(command, config) : wrapCommand(command)
-    )
-    |> Unix.open_process_in;
+  let inChannel = wrapCommand(command) |> Unix.open_process_in;
 
   let commandOutput = default();
 
@@ -91,15 +86,6 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
 };
 
 let runMultipleCommand = (~config, listOfCommands: list(string)) => {
-  /*
-   * Need to split of the commands more intelligently here, or somewhere.
-   *
-   * That is, currently runCmd is called the exact same for everything,
-   * rather than with different options for the main and aux commands.
-   *
-   * Should refact to a list of Objs, with those options in.
-   */
-
   let parMapList = Parmap.L(listOfCommands);
-  Parmap.parmapi((i, c) => runCmd(~config, c), parMapList);
+  Parmap.parmapi((i, c) => runCmd(~config, ~runSilently=i != 0, c), parMapList);
 };

@@ -36,9 +36,3 @@ let getLogFile = config => {
 
   Util.join([outputFolder, getFormattedTime() ++ ".log"]);
 };
-
-let logCommand = (command, configPath) => {
-  let logFilePath = getLogFile(configPath);
-
-  command ++ " 2>&1 | tee " ++ logFilePath;
-};
