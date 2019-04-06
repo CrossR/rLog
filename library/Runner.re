@@ -24,16 +24,16 @@ let start = (args, logMsg) => {
    *  - The metadata one, with the command ran, error code, logger commands from
    *    the config file, any extra commands logged as in the parseLine func.
    */
-    logMsg("Loading config...");
-    let config = Config.getConfig(args.configPath^);
-    let cmd = String.concat(" ", args.restOfCLI^);
-    logMsg("Command to be run is: " ++ cmd);
+  logMsg("Loading config...");
+  let config = Config.getConfig(args.configPath^);
+  let cmd = String.concat(" ", args.restOfCLI^);
+  logMsg("Command to be run is: " ++ cmd);
 
-    let cmds = [cmd, ...config.commandsToRun]
-    logMsg("Total command list is: ")
-    List.iter((c) => logMsg("    " ++ c), cmds);
+  let cmds = [cmd, ...config.commandsToRun];
+  logMsg("Total command list is: ");
+  List.iter(c => logMsg("    " ++ c), cmds);
 
-    logMsg("Staring command runner...");
-    let _ = Command.runMultipleCommand(~config, cmds);
-    ();
+  logMsg("Staring command runner...");
+  let _ = Command.runMultipleCommand(~config, cmds);
+  ();
 };
