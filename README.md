@@ -61,3 +61,5 @@ Stuff to do:
     log file in the data location too).
     - Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
+    - Check if I can get this running on Windows (not a priority since none
+    of my workflow that benefits from this is on Windows...).
