@@ -4,9 +4,9 @@
  * Various utilities to logging the output of commands.
  */
 open Config;
+open Util;
 
-let padDate = str =>
-  Util.leftPadString(~inputString=str, ~len=2, ~padding="0");
+let padDate = str => leftPadString(~inputString=str, ~len=2, ~padding="0");
 
 let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
   string_of_int(time.tm_year + 1900)
@@ -30,13 +30,12 @@ let getFormattedTime = (~time=Unix.time(), ()) => {
 };
 
 let getLogFile = (job, config) => {
-  let outputFolder =
-    Util.makeAbsolutePath(Util.join([config.outputPath, getDate()]));
+  let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
 
-  Util.checkFolderExists(config.outputPath);
-  Util.checkFolderExists(outputFolder);
+  checkFolderExists(config.outputPath);
+  checkFolderExists(outputFolder);
 
-  Util.join([outputFolder, job ++ "_" ++ getFormattedTime() ++ ".log"]);
+  join([outputFolder, job ++ "_" ++ getFormattedTime() ++ ".log"]);
 };
 
 let writeFile = (path, stringList) => {
@@ -62,17 +61,13 @@ let formatLinesOfInterest = (command: Command.t) =>
         a => "    - Line " ++ string_of_int(fst(a)) ++ ": " ++ snd(a),
         command.linesOfInterest,
       );
-    Util.combineLists([
-      ["Logged Output:", ""],
-      formattedLinesOfInterest,
-      [""],
-    ]);
+    combineLists([["Logged Output:", ""], formattedLinesOfInterest, [""]]);
   };
 
 let formatSubCommand = (command: Command.t) => {
-  Util.combineLists([
-    ["### " ++ command.command, ""],
-    command.outputLines,
+  combineLists([
+    ["### " ++ code(command.command), ""],
+    codeBlock(command.outputLines),
     [""],
   ]);
 };
@@ -108,11 +103,11 @@ let makeMetaData = (output: list(Command.t)) => {
 
   let header = (n, str) => String.make(n, '#') ++ " " ++ str;
   let mainCommandOutput = [
-    header(1, mainCommand.command),
+    header(1, code(mainCommand.command)),
     "",
     header(2, "Result"),
     "",
-    Util.processMessage(mainCommand.status),
+    processMessage(mainCommand.status),
     "",
     ...formatLinesOfInterest(mainCommand),
   ];

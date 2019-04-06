@@ -58,6 +58,8 @@ let leftPadString = (~inputString, ~len, ~padding) => {
   paddedString^;
 };
 
+let code = str => "`" ++ str ++ "`";
+
 let processMessage = (status: option(Unix.process_status)) => {
   switch (status) {
   | Some(WEXITED(code)) => "Exit Code: " ++ string_of_int(code)
@@ -73,3 +75,5 @@ let rec combineLists = listOfLists =>
   | [] => []
   | [l, ...rest] => List.append(l, combineLists(rest))
   };
+
+let codeBlock = strList => combineLists([["```sh"], strList, ["```"]]);
