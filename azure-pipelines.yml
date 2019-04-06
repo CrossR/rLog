@@ -13,6 +13,8 @@ jobs:
   variables:
     ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i/
     ESY__CACHE_SOURCE_TARBALL_PATH: /home/vsts/.esy/source/i
+    STAGING_DIRECTORY: /home/vsts/STAGING
+    STAGING_DIRECTORY_UNIX: /home/vsts/STAGING
 
   steps:
   - template: .ci/restore-build-cache.yml
@@ -27,6 +29,8 @@ jobs:
   variables:
     ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i/
     ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
+    STAGING_DIRECTORY: /Users/vsts/STAGING
+    STAGING_DIRECTORY_UNIX: /Users/vsts/STAGING
 
   steps:
   - template: .ci/restore-build-cache.yml
@@ -41,6 +45,8 @@ jobs:
   variables:
     ESY__CACHE_INSTALL_PATH: C:\Users\VssAdministrator\.esy\3_\i
     ESY__CACHE_SOURCE_TARBALL_PATH: C:\Users\VssAdministrator\.esy\source\i
+    STAGING_DIRECTORY: C:\\Users\\VssAdministrator\\STAGING
+    STAGING_DIRECTORY_UNIX: /C/Users/VssAdministrator/STAGING
 
   steps:
   - template: .ci/restore-build-cache.yml
