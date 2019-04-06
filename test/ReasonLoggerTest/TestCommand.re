@@ -42,7 +42,7 @@ describe("Test basic process launching", ({test, _}) => {
     );
     expect.equal(result.outputLines, expectedResult);
 
-    let linesOfInterest = ["1", "50"];
+    let linesOfInterest = [(1, "1"), (50, "50")];
     expect.equal(
       List.length(result.linesOfInterest),
       List.length(linesOfInterest),

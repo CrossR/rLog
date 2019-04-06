@@ -6,7 +6,7 @@
 
 type t = {
   mutable outputLines: list(string),
-  mutable linesOfInterest: list(string),
+  mutable linesOfInterest: list((int, string)),
   mutable status: option(Unix.process_status),
 };
 
@@ -41,7 +41,7 @@ let checkForLinesOfInterest = (commandOutput, valuesToLog) => {
       if (Str.string_match(currentRegex, line^, 0)) {
         let subStart = Str.match_end();
         line := String.sub(line^, subStart, String.length(line^) - subStart);
-        linesOfInterest := List.append(linesOfInterest^, [line^]);
+        linesOfInterest := List.append(linesOfInterest^, [(i + 1, line^)]);
       };
     };
 
