@@ -7,9 +7,10 @@
 type t = {
   mutable outputLines: list(string),
   mutable linesOfInterest: list(string),
+  mutable status: option(Unix.process_status),
 };
 
-let default = () => {outputLines: [], linesOfInterest: []};
+let default = () => {outputLines: [], linesOfInterest: [], status: None};
 
 let parseLine = (runSilently, line, commandOutput) => {
   /*
@@ -80,7 +81,7 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
       }
   );
 
-  close_in(inChannel);
+  commandOutput.status = Some(Unix.close_process_in(inChannel));
 
   checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
 };
