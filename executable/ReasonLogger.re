@@ -24,13 +24,7 @@ let logAndRun = () => {
     logMsg("Command to be run is: " ++ cmd);
 
     logMsg("Staring command runner...");
-    let _ =
-      ReasonLoggerLib.Command.runCmd(
-        ~printToScreen=true,
-        ~logCommand=true,
-        ~config,
-        cmd,
-      );
+    let _ = ReasonLoggerLib.Command.runCmd(~config, cmd);
     ();
   };
 

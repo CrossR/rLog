@@ -4,7 +4,7 @@
  * Functions related to running a command and saving its output.
  */
 
-let parseLine = (printToScreen, line, lines) => {
+let parseLine = (runSilently, line, lines) => {
   /*
    * Decide if this is needed.
    * Potentially, could use this for some in proc monitoring.
@@ -12,7 +12,7 @@ let parseLine = (printToScreen, line, lines) => {
    * and those commands are logged differently.
    *
    */
-  if (printToScreen) {
+  if (!runSilently) {
     Console.log(line);
   };
 
@@ -23,8 +23,7 @@ let wrapCommand = command => {
   command ++ " 2>&1";
 };
 
-let runCmd =
-    (~printToScreen=true, ~logCommand=true, ~config=Config.default, command) => {
+let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   /*
    * Write a top level runner, that will launch this function, as well as all
    * the result of the stuff that is discussed here. Once that is done, I
@@ -44,7 +43,10 @@ let runCmd =
    *    the config file, any extra commands logged as in the parseLine func.
    */
   let inChannel =
-    (logCommand ? Logging.logCommand(command, config) : wrapCommand(command))
+    (
+      !runSilently
+        ? Logging.logCommand(command, config) : wrapCommand(command)
+    )
     |> Unix.open_process_in;
 
   let lines = ref([]);
@@ -57,9 +59,7 @@ let runCmd =
   )
   |> (
     stream =>
-      try (
-        Stream.iter(line => parseLine(printToScreen, line, lines), stream)
-      ) {
+      try (Stream.iter(line => parseLine(runSilently, line, lines), stream)) {
       | _error => close_in(inChannel)
       }
   );
