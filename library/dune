@@ -4,6 +4,7 @@
    (libraries 
       str
       Rench
+      parmap
       yojson
       ppx_deriving.runtime
       ppx_deriving_yojson.runtime
