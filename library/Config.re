@@ -41,7 +41,7 @@ let getConfigLocation = () =>
 let checkConfigPath = path => {
   let absPath = Util.makeAbsolutePath(path);
 
-  if (!Str.string_match(Str.regexp("config.json"), absPath, 0)) {
+  if (!Str.string_match(Str.regexp(".*\\.json"), absPath, 0)) {
     Util.join([absPath, "config.json"]);
   } else {
     absPath;

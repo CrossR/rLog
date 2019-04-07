@@ -1,0 +1,11 @@
+{
+    "outputPath": "/tmp/reasonLoggerOut",
+    "commandsToRun": [
+        "bash test/assets/std_err.sh",
+        "bash test/assets/std_out.sh"
+    ],
+    "loadLocalCommands": false,
+    "valuesToLog": [
+        "@LOG@: "
+    ]
+}
