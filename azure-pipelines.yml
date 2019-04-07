@@ -21,6 +21,14 @@ jobs:
   # - template: .ci/esy-build-steps.yml
   - script: .ci/create-static-binary.sh
   - template: .ci/publish-build-cache.yml
+  - task: PublishTestResults@2
+    displayName: 'Publish JUnit file'
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: '**/*junit.xml'
+      buildPlatform: ${{ parameters.platform }}
+      testRunTitle: ${{ parameters.platform }}
+      failTaskOnFailedTests: true
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
     inputs:

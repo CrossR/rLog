@@ -15,3 +15,5 @@ RUN npx esy i
 RUN npx esy pesy
 RUN npx esy b
 RUN npx esy test
+RUN npx esy format
+RUN git diff --exit-code

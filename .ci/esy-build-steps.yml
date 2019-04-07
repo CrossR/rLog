@@ -27,6 +27,3 @@ steps:
     displayName: esy format
   - script: git diff --exit-code
     displayName: 'Check formatting, run esy format if fails.'
-  # - script: esy release
-  #   displayName: 'Test Creation of Prebuilt Binary Releases'
-  #   continueOnError: true
