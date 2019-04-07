@@ -92,10 +92,12 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
 };
 
-let runMultipleCommand = (~config, listOfCommands: list(string)) => {
+let runMultipleCommand =
+    (~silent=false, ~config, listOfCommands: list(string)) => {
   let parMapList = Parmap.L(listOfCommands);
+  let runSilently = i => silent ? true : i != 0;
   Parmap.parmapi(
-    (i, c) => runCmd(~config, ~runSilently=i != 0, c),
+    (i, c) => runCmd(~config, ~runSilently=runSilently(i), c),
     parMapList,
   );
 };

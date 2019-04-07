@@ -14,6 +14,8 @@ describe("Test basic process launching", ({test, _}) => {
       List.length(expectedResult),
     );
     expect.equal(result.outputLines, expectedResult);
+    expect.equal(result.status, Some(Unix.WEXITED(0)));
+    expect.equal(result.command, cmd);
   });
 
   test(
@@ -28,6 +30,8 @@ describe("Test basic process launching", ({test, _}) => {
       List.length(expectedResult),
     );
     expect.equal(result.outputLines, expectedResult);
+    expect.equal(result.status, Some(Unix.WEXITED(0)));
+    expect.equal(result.command, cmd);
   });
 
   test("Logs lines of interest as expected", ({expect}) => {
@@ -48,5 +52,29 @@ describe("Test basic process launching", ({test, _}) => {
       List.length(linesOfInterest),
     );
     expect.equal(result.linesOfInterest, linesOfInterest);
+    expect.equal(result.status, Some(Unix.WEXITED(0)));
+    expect.equal(result.command, cmd);
+  });
+
+  test("Runs multiple commands correctly", ({expect}) => {
+    let cmds = [
+      "bash " ++ Unix.getcwd() ++ "/test/assets/std_out.sh",
+      "bash " ++ Unix.getcwd() ++ "/test/assets/std_err.sh",
+      "bash " ++ Unix.getcwd() ++ "/test/assets/out_with_log.sh",
+    ];
+
+    let expectedResults = [range(1, 50), range(1, 50), range(1, 50)];
+    let config = ReasonLoggerLib.Config.default;
+    let results = runMultipleCommand(~silent=true, ~config, cmds);
+
+    for (i in 0 to List.length(results) - 1) {
+      let result = List.nth(results, i);
+      let cmd = List.nth(cmds, i);
+      let expected = List.nth(expectedResults, i);
+
+      expect.equal(result.outputLines, expected);
+      expect.equal(result.status, Some(Unix.WEXITED(0)));
+      expect.equal(result.command, cmd);
+    };
   });
 });
