@@ -126,7 +126,5 @@ let getConfig = configPaths => {
     Console.warn("Using default config...");
   };
 
-  Console.log("Current conf: ");
-  Console.log(mainConfig^);
   mainConfig^;
 };
