@@ -8,7 +8,7 @@ open Cli;
 let getConfigPaths = args => {
   let rootGitDir =
     Command.runCmd(~runSilently=true, "git rev-parse --show-toplevel");
-  Console.log(rootGitDir);
+
   if (rootGitDir.outputLines != []) {
     [args.configPath^, List.nth(rootGitDir.outputLines, 0), "."];
   } else {
