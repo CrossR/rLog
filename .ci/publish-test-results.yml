@@ -1,0 +1,11 @@
+# Steps for publishing test results
+
+steps:
+  - task: PublishTestResults@2
+    displayName: 'Publish JUnit file'
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: '**/*junit.xml'
+      buildPlatform: ${{ parameters.platform }}
+      testRunTitle: ${{ parameters.platform }}
+      failTaskOnFailedTests: true
