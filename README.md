@@ -1,6 +1,8 @@
 # rLog
 
-[![Build Status](https://dev.azure.com/CrossR-1/reasonLogger/_apis/build/status/CrossR.reasonLogger?branchName=master)](https://dev.azure.com/CrossR-1/reasonLogger/_build/latest?definitionId=4&branchName=master)
+<p align="center">
+<a href="https://dev.azure.com/CrossR-1/rLog/_build/latest?definitionId=5&branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
+</p>
 
 rLog is a very WIP tool for logging the output of commands for scientific
 workflows.

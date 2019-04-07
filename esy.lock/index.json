@@ -1,6 +1,6 @@
 {
   "checksum": "094e783ba7378ffbe68ddfb8f4cfb58d",
-  "root": "reason-logger@link-dev:./package.json",
+  "root": "rLog@link-dev:./package.json",
   "node": {
     "refmterr@3.1.10@d41d8cd9": {
       "id": "refmterr@3.1.10@d41d8cd9",
@@ -19,9 +19,9 @@
       ],
       "devDependencies": []
     },
-    "reason-logger@link-dev:./package.json": {
-      "id": "reason-logger@link-dev:./package.json",
-      "name": "reason-logger",
+    "rLog@link-dev:./package.json": {
+      "id": "rLog@link-dev:./package.json",
+      "name": "rLog",
       "version": "link-dev:./package.json",
       "source": {
         "type": "link-dev",
