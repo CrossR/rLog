@@ -27,6 +27,8 @@ let getHome = () => {
 let makeAbsolutePath = path =>
   if (path.[0] == '~') {
     Str.replace_first(Str.regexp("~"), getHome(), path);
+  } else if (path.[0] != '/') {
+    join([Unix.getcwd(), path]);
   } else {
     path;
   };

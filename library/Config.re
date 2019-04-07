@@ -38,6 +38,16 @@ let getConfigLocation = () =>
   | _ => Util.join([Util.getHome(), ".config", "reasonLogger", "config.json"])
   };
 
+let checkConfigPath = path => {
+  let absPath = Util.makeAbsolutePath(path);
+
+  if (!Str.string_match(Str.regexp("config.json"), absPath, 0)) {
+    Util.join([absPath, "config.json"]);
+  } else {
+    absPath;
+  };
+};
+
 let saveConfig = (configPath, config) =>
   Yojson.Safe.to_file(configPath, config);
 
@@ -50,7 +60,8 @@ let makeDefaultConfig = configPath => {
    * "override" or "add" to combine the commandsToRun or only use the project
    * specific ones.
    */
-  let configPath = configPath != "" ? configPath : getConfigLocation();
+  let configPath =
+    configPath != "" ? checkConfigPath(configPath) : getConfigLocation();
 
   if (!Sys.file_exists(configPath)) {
     let defaultJson = Yojson.Safe.from_string(defaultJsonString);
@@ -70,6 +81,19 @@ let loadConfig = configPath => {
     Console.log("Error Loc " ++ loc);
     default;
   };
+};
+
+let loadProjectConfig = () => {
+  /*
+   * Steps here:
+   *
+   * Get the current working directory.
+   * Then:
+   *   - Get the config from there.
+   *   - Get the config from the project root (if Git)
+   *
+   * Return that config.
+   */
 };
 
 let getConfig = configPath => {
