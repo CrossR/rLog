@@ -17,11 +17,11 @@ jobs:
     STAGING_DIRECTORY_UNIX: /home/vsts/STAGING
 
   steps:
-  - template: .ci/restore-build-cache.yml
+  # - template: .ci/restore-build-cache.yml
   # - template: .ci/esy-build-steps.yml
   - script: .ci/create-static-binary.sh
   - script: chmod +x rLog
-  - template: .ci/publish-build-cache.yml
+  # - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
     inputs:
