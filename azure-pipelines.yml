@@ -21,6 +21,7 @@ jobs:
   # - template: .ci/esy-build-steps.yml
   - script: .ci/create-static-binary.sh
   - template: .ci/publish-test-results.yml
+  - script: chmod +x rLog
   - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
@@ -45,7 +46,6 @@ jobs:
   - script: cp _build/default/executable/RLog.exe _build/rLog
   - script: strip _build/rLog
   - script: chmod +x _build/rLog
-  - script: _build/rLog --help
   - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
