@@ -5,9 +5,24 @@
  */
 open Cli;
 
+let getConfigPaths = args => {
+  let rootGitDir =
+    Command.runCmd(~runSilently=true, "git rev-parse --show-toplevel");
+  Console.log(rootGitDir);
+  if (rootGitDir.outputLines != []) {
+    [args.configPath^, List.nth(rootGitDir.outputLines, 0), "."];
+  } else {
+    [args.configPath^, "."];
+  };
+};
+
 let start = (~silent=false, args, logMsg) => {
-  logMsg("Loading config...");
-  let config = Config.getConfig(args.configPath^);
+  logMsg("Loading config from:");
+  let configPaths = getConfigPaths(args);
+  List.iter(p => logMsg("    " ++ p), configPaths);
+
+  let config = Config.getConfig(configPaths);
+
   let cmd = String.concat(" ", args.restOfCLI^);
   logMsg("Command to be run is: " ++ cmd);
 

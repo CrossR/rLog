@@ -7,13 +7,13 @@
 [@deriving yojson]
 type t = {
   [@key "outputPath"]
-  outputPath: string,
+  mutable outputPath: string,
   [@key "commandsToRun"]
-  commandsToRun: list(string),
+  mutable commandsToRun: list(string),
   [@key "loadLocalCommands"]
   loadLocalCommands: bool,
   [@key "valuesToLog"]
-  valuesToLog: list(string),
+  mutable valuesToLog: list(string),
 };
 
 let default = {
@@ -83,25 +83,40 @@ let loadConfig = configPath => {
   };
 };
 
-let loadProjectConfig = () => {
-  /*
-   * Steps here:
-   *
-   * Get the current working directory.
-   * Then:
-   *   - Get the config from there.
-   *   - Get the config from the project root (if Git)
-   *
-   * Return that config.
-   */
+let loadProjectConfig = path => {
+  let currentConfigPath = checkConfigPath(Util.join([path, "config.json"]));
+
+  if (Sys.file_exists(currentConfigPath)) {
+    Some(loadConfig(currentConfigPath));
+  } else {
+    None;
+  };
 };
 
-let getConfig = configPath => {
-  let config = loadConfig(configPath);
+let getConfig = configPaths => {
+  /* Get the main defualt config */
+  let configPath = List.nth(configPaths, 0);
+  let mainConfig = loadConfig(configPath);
 
-  if (config == default) {
+  if (mainConfig.loadLocalCommands) {
+    for (i in 1 to List.length(configPaths) - 1) {
+      let configPath = List.nth(configPaths, i);
+      let config = loadProjectConfig(configPath);
+
+      let jointList =
+        switch (config) {
+        | Some(config) =>
+          List.append(mainConfig.commandsToRun, config.commandsToRun)
+        | None => mainConfig.commandsToRun
+        };
+
+      mainConfig.commandsToRun = List.sort_uniq((a, b) => 0, jointList);
+    };
+  };
+
+  if (mainConfig == default) {
     Console.warn("Using default config...");
   };
 
-  config;
+  mainConfig;
 };

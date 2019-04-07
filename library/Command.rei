@@ -11,6 +11,7 @@ type t = {
   mutable status: option(Unix.process_status),
 };
 
-let default: (string) => t
-let runCmd: (~runSilently: bool=?, ~config: Config.t=?, string) => t
-let runMultipleCommand: (~silent: bool=?, ~config: Config.t, list(string)) => list(t)
+let default: string => t;
+let runCmd: (~runSilently: bool=?, ~config: Config.t=?, string) => t;
+let runMultipleCommand:
+  (~silent: bool=?, ~config: Config.t, list(string)) => list(t);

@@ -5,12 +5,12 @@
  */
 
 type t = {
-  outputPath: string,
-  commandsToRun: list(string),
+  mutable outputPath: string,
+  mutable commandsToRun: list(string),
   loadLocalCommands: bool,
-  valuesToLog: list(string),
+  mutable valuesToLog: list(string),
 };
 
-let default: t
-let makeDefaultConfig: (string) => unit
-let getConfig: (string) => t
+let default: t;
+let makeDefaultConfig: string => unit;
+let getConfig: list(string) => t;
