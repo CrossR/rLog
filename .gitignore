@@ -6,7 +6,6 @@ node_modules/
 _build
 _release
 _esy/
-reason-logger.install
 .DS_Store
 *.install
 *_junit.xml

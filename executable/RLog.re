@@ -1,9 +1,9 @@
 /*
- * ReasonLogger.re
+ * RLog.re
  *
  * Main entry point for the CLI app.
  */
-open ReasonLoggerLib;
+open RLogLib;
 
 let logAndRun = (args, logMsg) => {
   let processStatus = Runner.start(args, logMsg);

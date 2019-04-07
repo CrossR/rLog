@@ -1,9 +1,11 @@
-# reasonLogger
+# rLog
 
-[![Build Status](https://dev.azure.com/CrossR-1/reasonLogger/_apis/build/status/CrossR.reasonLogger?branchName=master)](https://dev.azure.com/CrossR-1/reasonLogger/_build/latest?definitionId=4&branchName=master)
+<p align="center">
+<a href="https://dev.azure.com/CrossR-1/rLog/_build/latest?definitionId=5&branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
+</p>
 
-reasonLogger is a very WIP tool for logging the output of commands for
-scientific workflows.
+rLog is a very WIP tool for logging the output of commands for scientific
+workflows.
 
 I find myself very often running some long-running command to produce
 simulation output or similar, where the output depends very heavily on the
@@ -22,11 +24,11 @@ For example:
 
 ## Configuration
 
-Configuration is achieved with a `config.json` in `~/.config/reasonLogger/`:
+Configuration is achieved with a `config.json` in `~/.config/rLog/`:
 
 ```json
 {
-    "outputPath": "~/reasonLoggerOut",
+    "outputPath": "~/rLogOut",
     "commandsToRun": [],
     "loadLocalCommands": false,
     "valuesToLog": ["@LOG@: "]
@@ -38,7 +40,7 @@ Where:
  - `outputPath` is the folder log files will be stored in.
  - `commandsToRun` is the additional logging commands to run.
  - `localLocalCommands` enables the ability to use a per project config file.
-    This will cause `reasonLogger` to load a local `config.json`, if there is
+    This will cause `rLog` to load a local `config.json`, if there is
     one in the current directory. It will also attempt to get one from the `git`
     root, if one exists. Any values in the `commandsToRun` and `valuesToLog`
     will be combined, but the `outputPath` will be overridden. The override
@@ -52,7 +54,11 @@ Where:
 
 ## Usage
 
-Usage should just be `reasonLogger -- commandToRun` (**Once I've made a binary release**).
+Usage should just be `rLog -- commandToRun`.
+
+`rLog genconfig` will generate a default config file in
+`~/.config/rLog` (or in a custom location if `--config-path` is
+given.)
 
 ## ToDo
 
@@ -63,9 +69,19 @@ Stuff to do:
  - [X] Implement the project specific config.
  - [ ] Add a search command (to dump out all commands, for use with FZF etc).
  - [ ] Add command to get a link to the most recent config (so then I can do
-    `do_simulation.sh` and then `reasonLogger link` and have a link to the
+    `do_simulation.sh` and then `rLog link` and have a link to the
     log file in the data location too).
  - [ ] Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
  - [ ] Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).
+
+## Thanks
+
+Thanks to both
+
+ - @Schniz : https://github.com/Schniz/fnm
+ - @ulrikstrid : https://github.com/ulrikstrid/reenv
+
+For their existing CLI apps that I used heavily to help fix things I couldn't
+get working! Especially around making a static binary.

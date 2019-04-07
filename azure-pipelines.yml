@@ -18,8 +18,15 @@ jobs:
 
   steps:
   - template: .ci/restore-build-cache.yml
-  - template: .ci/esy-build-steps.yml
+  # - template: .ci/esy-build-steps.yml
+  - script: .ci/create-static-binary.sh
+  - script: chmod +x rLog
   - template: .ci/publish-build-cache.yml
+  - task: PublishBuildArtifacts@1
+    displayName: 'Save artifact'
+    inputs:
+        PathtoPublish: rLog
+        ArtifactName: rLog-linux
 
 - job: MacOS
   timeoutInMinutes: 0
@@ -35,4 +42,12 @@ jobs:
   steps:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
+  - script: cp _build/default/executable/RLog.exe _build/rLog
+  - script: strip _build/rLog
+  - script: chmod +x _build/rLog
   - template: .ci/publish-build-cache.yml
+  - task: PublishBuildArtifacts@1
+    displayName: 'Save artifact'
+    inputs:
+        PathtoPublish: '_build/rLog'
+        ArtifactName: rLog-macos

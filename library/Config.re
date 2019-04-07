@@ -17,7 +17,7 @@ type t = {
 };
 
 let default = {
-  outputPath: "~/reasonLoggerOut",
+  outputPath: "~/rLogOut",
   commandsToRun: [],
   loadLocalCommands: false,
   valuesToLog: ["@LOG@: "],
@@ -25,7 +25,7 @@ let default = {
 
 let defaultJsonString = {
   {|{
-    "outputPath": "~/reasonLoggerOut",
+    "outputPath": "~/rLogOut",
     "commandsToRun": [],
     "loadLocalCommands": false,
     "valuesToLog": ["@LOG@: "]
@@ -34,8 +34,8 @@ let defaultJsonString = {
 
 let getConfigLocation = () =>
   switch (Sys.os_type) {
-  | "Win32" => Util.join([Util.getHome(), "reasonLogger", "config.json"])
-  | _ => Util.join([Util.getHome(), ".config", "reasonLogger", "config.json"])
+  | "Win32" => Util.join([Util.getHome(), "rLog", "config.json"])
+  | _ => Util.join([Util.getHome(), ".config", "rLog", "config.json"])
   };
 
 let checkConfigPath = path => {
@@ -126,7 +126,5 @@ let getConfig = configPaths => {
     Console.warn("Using default config...");
   };
 
-  Console.log("Current conf: ");
-  Console.log(mainConfig^);
   mainConfig^;
 };

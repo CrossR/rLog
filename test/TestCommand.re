@@ -1,6 +1,6 @@
 open TestFramework;
 open TestUtils;
-open ReasonLoggerLib.Command;
+open RLogLib.Command;
 
 describe("Test basic process launching", ({test, _}) => {
   test("Can launch a basic process and get output", ({expect}) => {
@@ -64,7 +64,7 @@ describe("Test basic process launching", ({test, _}) => {
     ];
 
     let expectedResults = [range(1, 50), range(1, 50), range(1, 50)];
-    let config = ReasonLoggerLib.Config.default;
+    let config = RLogLib.Config.default;
     let results = runMultipleCommand(~silent=true, ~config, cmds);
 
     for (i in 0 to List.length(results) - 1) {

@@ -8,10 +8,12 @@ steps:
     displayName: 'npm install -g esy@0.5.6'
   - script: esy install
     displayName: 'esy install'
+  - script: esy pesy
+    displayName: 'esy pesy'
   - script: esy build
     displayName: 'esy build'
-  - script: esy test-ci
-    displayName: 'esy test-ci'
+  - script: esy test
+    displayName: 'esy test'
     continueOnError: true
   - task: PublishTestResults@2
     displayName: 'Publish JUnit file'
@@ -25,6 +27,3 @@ steps:
     displayName: esy format
   - script: git diff --exit-code
     displayName: 'Check formatting, run esy format if fails.'
-  # - script: esy release
-  #   displayName: 'Test Creation of Prebuilt Binary Releases'
-  #   continueOnError: true
