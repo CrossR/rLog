@@ -1,7 +1,7 @@
 /*
  * Cli.re
  *
- * Various utilities to help with the CLI of reasonLogger.
+ * Various utilities to help with the CLI of rLog.
  */
 
 type t = {
@@ -20,14 +20,14 @@ let default = {
   command: Util.CommandType.Run,
 };
 
-let missingCommand = "reasonLogger must be called with -- followed by the command to be ran!";
+let missingCommand = "rLog must be called with -- followed by the command to be ran!";
 
-let helpText = {|reasonLogger 0.0.1
+let helpText = {|rLog 0.1.0
 Ryan Cross <r.cross@lancaster.ac.uk>
 
-reasonLogger is a CLI tool for logging the output of commands.
-Any command passed to this tool will have its stdOut and stdErr logged
-to the location specified in the configuration file.
+rLog is a CLI tool for logging the output of commands. Any command passed to
+this tool will have its stdOut and stdErr logged to the location specified in
+the configuration file.
 
 To get the most of this tool, add additional logging commands to the
 configuration file, such that the full state of your environment is logged

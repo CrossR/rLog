@@ -24,8 +24,8 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
     inputs:
-        PathtoPublish: reasonLogger
-        ArtifactName: reasonLogger-linux
+        PathtoPublish: rLog
+        ArtifactName: rLog-linux
 
 - job: MacOS
   timeoutInMinutes: 0
@@ -41,11 +41,11 @@ jobs:
   steps:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
-  - script: cp _build/default/executable/ReasonLogger.exe _build/reasonLogger
-  - script: strip _build/reasonLogger
+  - script: cp _build/default/executable/RLog.exe _build/rLog
+  - script: strip _build/rLog
   - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
     inputs:
-        PathtoPublish: '_build/reasonLogger'
-        ArtifactName: reasonLogger-macos
+        PathtoPublish: '_build/rLog'
+        ArtifactName: rLog-macos

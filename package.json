@@ -1,15 +1,15 @@
 {
-  "name": "reason-logger",
-  "version": "0.0.1",
-  "description": "My Project",
+  "name": "rLog",
+  "version": "0.1.0",
+  "description": "A logging tool for scientific workflows",
   "esy": {
     "build": "pesy",
     "buildsInSource": "_build",
-    "release": { "releasedBinaries": [ "reasonLogger.exe" ] }
+    "release": { "releasedBinaries": [ "rLog.exe" ] }
   },
   "buildDirs": {
     "test": {
-      "require": [ "reason-logger.lib", "rely.lib" ],
+      "require": [ "rLog.lib", "rely.lib" ],
       "main": "RunTestsCI",
       "name": "RunTests.exe",
       "ocamloptFlags": [ "-linkall", "-g" ]
@@ -20,19 +20,19 @@
         "str", "console.lib", "parmap", "yojson", "ppx_deriving.runtime",
         "ppx_deriving_yojson.runtime"
       ],
-      "name": "reason-logger.lib",
-      "namespace": "ReasonLoggerLib"
+      "name": "rLog.lib",
+      "namespace": "rLogLib"
     },
     "executable": {
-      "require": [ "reason-logger.lib" ],
-      "main": "ReasonLogger",
-      "name": "reasonLogger.exe"
+      "require": [ "rLog.lib" ],
+      "main": "RLog",
+      "name": "rLog.exe"
     }
   },
   "scripts": {
     "pesy": "bash -c 'env PESY_MODE=update pesy'",
     "test": "esy x RunTests.exe",
-    "run": "esy x reasonLogger.exe",
+    "run": "esy x rLog.exe",
     "format": "bash -c 'refmt --in-place {library,executable,test}/*.re'"
   },
   "license": "MIT",

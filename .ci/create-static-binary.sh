@@ -2,9 +2,9 @@
 
 echo "Building binary in docker"
 
-docker build . -t crossr/reason-logger-static
+docker build . -t crossr/rlog-static-binary
 
-echo "Copying to ./reasonLogger"
+echo "Copying to ./rLog"
 
-docker run --rm -v $(pwd):$(pwd) --workdir $(pwd) crossr/reason-logger-static cp /app/_build/default/executable/ReasonLogger.exe ./reasonLogger
-strip ./reasonLogger
+docker run --rm -v $(pwd):$(pwd) --workdir $(pwd) crossr/rlog-static-binary cp /app/_build/default/executable/RLog.exe ./rLog
+strip ./rLog
