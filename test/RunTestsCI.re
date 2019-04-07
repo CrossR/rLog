@@ -1,8 +1,11 @@
 /* CI Specific Tests, that output JUnit test output. */
+include TestLogger;
+include TestCommand;
+include TestRunner;
 
 let jUnitOutputFile = "./" ++ Sys.os_type ++ "_junit.xml";
 
-ReasonLoggerTest.TestFramework.run(
+TestFramework.run(
   Rely.RunConfig.withReporters(
     [Default, JUnit(jUnitOutputFile)],
     Rely.RunConfig.initialize(),

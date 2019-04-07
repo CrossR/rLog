@@ -17,7 +17,7 @@
         "reason-logger.lib",
         "rely.lib"
       ],
-      "main": "RunTests",
+      "main": "RunTestsCI",
       "name": "RunTests.exe",
       "ocamloptFlags": [
         "-linkall",
