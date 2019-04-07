@@ -60,7 +60,7 @@ Stuff to do:
 
  - [ ] Make a release, so I have a binary.
  - [X] Return the ran commands status code.
- - [ ] Implement the project specific config.
+ - [X] Implement the project specific config.
  - [ ] Add a search command (to dump out all commands, for use with FZF etc).
  - [ ] Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `reasonLogger link` and have a link to the
