@@ -52,7 +52,11 @@ Where:
 
 ## Usage
 
-Usage should just be `reasonLogger -- commandToRun` (**Once I've made a binary release**).
+Usage should just be `reasonLogger -- commandToRun`.
+
+`reasonLogger genconfig` will generate a default config file in
+`~/.config/reasonLogger` (or in a custom location if `--config-path` is
+given.)
 
 ## ToDo
 
