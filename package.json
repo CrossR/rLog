@@ -2,13 +2,61 @@
   "name": "reason-logger",
   "version": "0.0.1",
   "description": "My Project",
-  "esy": { "build": "refmterr dune build -p ReasonLoggerLib" },
+  "esy": {
+    "build": "pesy",
+    "buildsInSource": "_build",
+    "release": {
+      "releasedBinaries": [
+        "reasonLogger.exe"
+      ]
+    }
+  },
+  "buildDirs": {
+    "test": {
+      "require": [
+        "reason-logger.lib",
+        "rely.lib"
+      ],
+      "main": "RunTests",
+      "name": "RunTests.exe",
+      "ocamloptFlags": [
+        "-linkall",
+        "-g"
+      ]
+    },
+    "library": {
+      "preprocess": [
+        "pps",
+        "ppx_deriving",
+        "ppx_deriving_yojson"
+      ],
+      "require": [
+        "str",
+        "console.lib",
+        "parmap",
+        "yojson",
+        "ppx_deriving.runtime",
+        "ppx_deriving_yojson.runtime"
+      ],
+      "name": "reason-logger.lib",
+      "namespace": "ReasonLoggerLib"
+    },
+    "executable": {
+      "require": [
+        "reason-logger.lib"
+      ],
+      "main": "ReasonLogger",
+      "name": "reasonLogger.exe"
+    }
+  },
   "scripts": {
-    "test": "esy x RunTests",
+    "pesy": "bash -c 'env PESY_MODE=update pesy'",
+    "test": "esy x RunTests.exe",
     "test-ci": "esy x RunTestsCI",
     "run": "esy x reasonLogger",
-    "format": "esy dune build @fmt --auto-promote"
+    "fmt": "bash -c 'refmt --in-place {library,executable,test}/*.re'"
   },
+  "license": "MIT",
   "dependencies": {
     "@esy-ocaml/reason": "*",
     "@opam/dune": ">=1.6.0",
@@ -21,5 +69,7 @@
     "ocaml": "^4.4.0",
     "refmterr": "*"
   },
-  "devDependencies": { "@opam/merlin": "*" }
+  "devDependencies": {
+    "@opam/merlin": "*"
+  }
 }

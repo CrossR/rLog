@@ -1,1 +1,5 @@
-ReasonLoggerTest.TestFramework.cli();
+include TestLogger;
+include TestCommand;
+include TestRunner;
+
+TestFramework.cli();
