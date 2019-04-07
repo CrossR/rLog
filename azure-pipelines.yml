@@ -18,8 +18,14 @@ jobs:
 
   steps:
   - template: .ci/restore-build-cache.yml
-  - template: .ci/esy-build-steps.yml
+  # - template: .ci/esy-build-steps.yml
+  - script: .ci/create-static-binary.sh
   - template: .ci/publish-build-cache.yml
+  - task: PublishBuildArtifacts@1
+    displayName: 'Save artifact'
+    inputs:
+        PathtoPublish: reasonLogger
+        ArtifactName: reasonLogger-linux
 
 - job: MacOS
   timeoutInMinutes: 0
@@ -35,4 +41,11 @@ jobs:
   steps:
   - template: .ci/restore-build-cache.yml
   - template: .ci/esy-build-steps.yml
+  - script: cp _build/default/executable/ReasonLogger.exe _build/reasonLogger
+  - script: strip _build/reasonLogger
   - template: .ci/publish-build-cache.yml
+  - task: PublishBuildArtifacts@1
+    displayName: 'Save artifact'
+    inputs:
+        PathtoPublish: '_build/reasonLogger'
+        ArtifactName: reasonLogger-macos

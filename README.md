@@ -69,3 +69,13 @@ Stuff to do:
     commands, that depend on the env/command ran, not just static ones).
  - [ ] Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).
+
+## Thanks
+
+Thanks to both
+
+ - @Schniz : https://github.com/Schniz/fnm
+ - @ulrikstrid : https://github.com/ulrikstrid/reenv
+
+For their existing CLI apps that I used heavily to help fix things I couldn't
+get working! Especially around making a static binary.
