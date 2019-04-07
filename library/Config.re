@@ -52,14 +52,6 @@ let saveConfig = (configPath, config) =>
   Yojson.Safe.to_file(configPath, config);
 
 let makeDefaultConfig = configPath => {
-  /*
-   * Should perhaps have this have some option of the config type,
-   * if I end up having the project specific config be different.
-   *
-   * Most likely, the project specific one will have an additional option for
-   * "override" or "add" to combine the commandsToRun or only use the project
-   * specific ones.
-   */
   let configPath =
     configPath != "" ? checkConfigPath(configPath) : getConfigLocation();
 
@@ -94,12 +86,11 @@ let loadProjectConfig = path => {
 };
 
 let combineProjectConfig = (main, project) => {
-
   /* Combine the commands and logger values */
-  let jointCommands = List.append(main.commandsToRun, project.commandsToRun)
+  let jointCommands = List.append(main.commandsToRun, project.commandsToRun);
   main.commandsToRun = List.sort_uniq(compare, jointCommands);
 
-  let jointLogging = List.append(main.valuesToLog, project.valuesToLog)
+  let jointLogging = List.append(main.valuesToLog, project.valuesToLog);
   main.valuesToLog = List.sort_uniq(compare, jointLogging);
 
   /* Override the output path to a project specific one, if set */
@@ -107,7 +98,7 @@ let combineProjectConfig = (main, project) => {
     main.outputPath = project.outputPath;
   };
 
-  main
+  main;
 };
 
 let getConfig = configPaths => {
@@ -121,11 +112,13 @@ let getConfig = configPaths => {
       let config = loadProjectConfig(configPath);
 
       mainConfig :=
-      switch (config) {
-      | Some(projectConfig) => combineProjectConfig(mainConfig^, projectConfig)
-      | None => mainConfig^
-      };
-
+        (
+          switch (config) {
+          | Some(projectConfig) =>
+            combineProjectConfig(mainConfig^, projectConfig)
+          | None => mainConfig^
+          }
+        );
     };
   };
 
@@ -135,5 +128,5 @@ let getConfig = configPaths => {
 
   Console.log("Current conf: ");
   Console.log(mainConfig^);
-  mainConfig^
+  mainConfig^;
 };

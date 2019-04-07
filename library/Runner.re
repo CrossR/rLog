@@ -5,6 +5,13 @@
  */
 open Cli;
 
+/*
+ * Always pass over the list, since we don't know if the others are needed until
+ * we actually load the config.
+ *
+ * Could avoid this I guess if I sorted the dependency cycle betwen Config and
+ * Command.
+ */
 let getConfigPaths = args => {
   let rootGitDir =
     Command.runCmd(~runSilently=true, "git rev-parse --show-toplevel");

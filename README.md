@@ -37,7 +37,13 @@ Where:
 
  - `outputPath` is the folder log files will be stored in.
  - `commandsToRun` is the additional logging commands to run.
- - `localLocalCommands` enables the ability to use a per project config file. **TODO**.
+ - `localLocalCommands` enables the ability to use a per project config file.
+    This will cause `reasonLogger` to load a local `config.json`, if there is
+    one in the current directory. It will also attempt to get one from the `git`
+    root, if one exists. Any values in the `commandsToRun` and `valuesToLog`
+    will be combined, but the `outputPath` will be overridden. The override
+    order is Current directory > Project > Global, so the current folder config
+    has the highest priority.
  - `valuesToLog` is a list of strings that appear at the start of output
     that is especially important to log. For example `echo "@LOG@: Cosmics
     disabled"` will cause `Cosmics disabled` to appear in the metadata log
