@@ -44,6 +44,8 @@ jobs:
   - template: .ci/esy-build-steps.yml
   - script: cp _build/default/executable/RLog.exe _build/rLog
   - script: strip _build/rLog
+  - script: chmod +x _build/rLog
+  - script: _build/rLog --help
   - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
     displayName: 'Save artifact'
