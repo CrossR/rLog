@@ -1,5 +1,5 @@
 /*
- * Logging.re
+ * Logging.rei
  *
  * Various utilities to logging the output of commands.
  */
