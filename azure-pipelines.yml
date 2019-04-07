@@ -20,7 +20,6 @@ jobs:
   - template: .ci/restore-build-cache.yml
   # - template: .ci/esy-build-steps.yml
   - script: .ci/create-static-binary.sh
-  - template: .ci/publish-test-results.yml
   - script: chmod +x rLog
   - template: .ci/publish-build-cache.yml
   - task: PublishBuildArtifacts@1
