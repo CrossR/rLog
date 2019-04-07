@@ -5,28 +5,16 @@
  */
 open ReasonLoggerLib;
 
-let logAndRun = () => {
-  let args = Cli.getArgs();
-  let logMsg = message => args.verbose^ ? Console.log(message) : ();
+let logAndRun = (args, logMsg) => {
+  let processStatus = Runner.start(args, logMsg);
 
-  logMsg("Full passed arguments are: ");
-  logMsg(args);
-
-  let finished = ref(false);
-
-  if (args.showHelp^) {
-    finished := true;
+  /* For anything but an actual exit, return 1 */
+  switch(processStatus) {
+  | Some(WEXITED(int)) => int
+  | Some(WSIGNALED(int)) => 1
+  | Some(WSTOPPED(int)) => 1
+  | None => 1
   };
-
-  let shouldRun = Cli.isRun(args) && List.length(args.restOfCLI^) > 0;
-
-  if (shouldRun && ! finished^) {
-    let _ = Runner.start(args, logMsg);
-    ();
-  } else if (args.command == Util.CommandType.GenerateConfig) {
-    Config.makeDefaultConfig(args.configPath^);
-  };
-  /* I should return the main command error code here */
 };
 
 /*
@@ -36,4 +24,30 @@ let logAndRun = () => {
  * - Project based config (ie find git root and append all commands in there to
  * the normal commands to run)
  */
-logAndRun();
+let getArgsAndRun = () => {
+  let args = Cli.getArgs();
+  let logMsg = message => args.verbose^ ? Console.log(message) : ();
+
+  logMsg("Full passed arguments are: ");
+  logMsg(args);
+
+  let finished = ref(false);
+  let exitCode = ref(0);
+
+  if (args.showHelp^) {
+    finished := true;
+  };
+
+  let shouldRun = Cli.isRun(args) && List.length(args.restOfCLI^) > 0;
+
+  if (shouldRun && ! finished^) {
+    exitCode := logAndRun(args, logMsg);
+  } else if (args.command == Util.CommandType.GenerateConfig) {
+    Config.makeDefaultConfig(args.configPath^);
+  };
+
+  exit(exitCode^)
+}
+
+/* Start the main app */
+getArgsAndRun();

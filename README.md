@@ -52,14 +52,14 @@ Usage should just be `reasonLogger -- commandToRun` (**Once I've made a binary r
 
 Stuff to do:
 
- - Make a release, so I have a binary.
- - Return the ran commands status code.
- - Implement the project specific config.
- - Add a search command (to dump out all commands, for use with FZF etc).
- - Add command to get a link to the most recent config (so then I can do
+ - [ ] Make a release, so I have a binary.
+ - [X] Return the ran commands status code.
+ - [ ] Implement the project specific config.
+ - [ ] Add a search command (to dump out all commands, for use with FZF etc).
+ - [ ] Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `reasonLogger link` and have a link to the
     log file in the data location too).
- - Add a variable syntax to the commands (so I can define dynamic
+ - [ ] Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
- - Check if I can get this running on Windows (not a priority since none
+ - [ ] Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).
