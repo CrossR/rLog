@@ -13,7 +13,7 @@ let logAndRun = () => {
 
   let finished = ref(false);
 
-  if (args.showHelp^) {
+  if (args.showHelp^ || List.length(args.restOfCLI^) == 0) {
     finished := true;
   };
 

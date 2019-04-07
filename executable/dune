@@ -1,5 +1,5 @@
 (executable
-   (name ReasonLogger)
-   (public_name ReasonLogger)
+   (name reasonLogger)
+   (public_name reasonLogger)
    (libraries ReasonLoggerLib )
 )

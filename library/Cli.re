@@ -18,8 +18,9 @@ let default = {
   restOfCLI: ref([]),
 };
 
-let helpText = {|
-reasonLogger 0.0.1
+let missingCommand = "reasonLogger must be called with -- followed by the command to be ran!";
+
+let helpText = {|reasonLogger 0.0.1
 Ryan Cross <r.cross@lancaster.ac.uk>
 
 reasonLogger is a CLI tool for logging the output of commands.
@@ -38,22 +39,23 @@ Flags:
 |};
 
 let argList = cliObj => {
-  [
-    ("-h", Arg.Set(cliObj.showHelp), "Show this help text."),
-    ("-v", Arg.Set(cliObj.verbose), "Enable verbose mode."),
+  /* Space at the start of every string so the Arg.align works */
+  Arg.align([
+    ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
+    ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
     (
       "--config",
       Arg.Set_string(cliObj.configPath),
-      "Provide a custom configuration file location.",
+      " Provide a custom configuration file location.",
     ),
     (
       "--",
       Arg.Rest(
         arg => cliObj.restOfCLI := List.append(cliObj.restOfCLI^, [arg]),
       ),
-      "Stop parsing CLI flags and treat the rest of the command as input for the command to run.",
+      " Stop parsing CLI flags and treat the rest of the command as input for the command to run.",
     ),
-  ];
+  ]);
 };
 
 let getArgs = () => {
@@ -66,6 +68,10 @@ let getArgs = () => {
 
   if (cliObj.showHelp^) {
     Arg.usage(argList(cliObj), helpText);
+  };
+
+  if (List.length(cliObj.restOfCLI^) == 0) {
+    Console.error(missingCommand);
   };
 
   cliObj;
