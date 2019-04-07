@@ -9,7 +9,7 @@ let logAndRun = (args, logMsg) => {
   let processStatus = Runner.start(args, logMsg);
 
   /* For anything but an actual exit, return 1 */
-  switch(processStatus) {
+  switch (processStatus) {
   | Some(WEXITED(int)) => int
   | Some(WSIGNALED(int)) => 1
   | Some(WSTOPPED(int)) => 1
@@ -46,8 +46,8 @@ let getArgsAndRun = () => {
     Config.makeDefaultConfig(args.configPath^);
   };
 
-  exit(exitCode^)
-}
+  exit(exitCode^);
+};
 
 /* Start the main app */
 getArgsAndRun();
