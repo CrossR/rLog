@@ -93,30 +93,45 @@ let loadProjectConfig = path => {
   };
 };
 
+let combineProjectConfig = (main, project) => {
+
+  /* Combine the commands and logger values */
+  let jointCommands = List.append(main.commandsToRun, project.commandsToRun)
+  main.commandsToRun = List.sort_uniq((a, b) => 0, jointCommands);
+
+  let jointLogging = List.append(main.valuesToLog, project.valuesToLog)
+  main.valuesToLog = List.sort_uniq((a, b) => 0, jointLogging);
+
+  /* Override the output path to a project specific one, if set */
+  if (project.outputPath != "") {
+    main.outputPath = project.outputPath;
+  };
+
+  main
+};
+
 let getConfig = configPaths => {
   /* Get the main defualt config */
   let configPath = List.nth(configPaths, 0);
-  let mainConfig = loadConfig(configPath);
+  let mainConfig = ref(loadConfig(configPath));
 
-  if (mainConfig.loadLocalCommands) {
+  if (mainConfig^.loadLocalCommands) {
     for (i in 1 to List.length(configPaths) - 1) {
       let configPath = List.nth(configPaths, i);
       let config = loadProjectConfig(configPath);
 
-      let jointList =
-        switch (config) {
-        | Some(config) =>
-          List.append(mainConfig.commandsToRun, config.commandsToRun)
-        | None => mainConfig.commandsToRun
-        };
+      mainConfig :=
+      switch (config) {
+      | Some(projectConfig) => combineProjectConfig(mainConfig^, projectConfig)
+      | None => mainConfig^
+      };
 
-      mainConfig.commandsToRun = List.sort_uniq((a, b) => 0, jointList);
     };
   };
 
-  if (mainConfig == default) {
+  if (mainConfig^ == default) {
     Console.warn("Using default config...");
   };
 
-  mainConfig;
+  mainConfig^
 };
