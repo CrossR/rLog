@@ -77,3 +77,19 @@ let rec combineLists = listOfLists =>
   };
 
 let codeBlock = strList => combineLists([["```sh"], strList, ["```"]]);
+
+module CommandType = {
+  type t =
+    | Run
+    | GenerateConfig
+    | Search;
+
+  let checkArg = str => {
+    switch (str) {
+    | "run" => Some(Run)
+    | "genconfig" => Some(GenerateConfig)
+    | "search" => Some(Search)
+    | _ => None
+    };
+  };
+};

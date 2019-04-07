@@ -41,13 +41,28 @@ let getConfigLocation = () =>
 let saveConfig = (configPath, config) =>
   Yojson.Safe.to_file(configPath, config);
 
-let loadConfig = configPath => {
+let makeDefaultConfig = configPath => {
+  /*
+   * Should perhaps have this have some option of the config type,
+   * if I end up having the project specific config be different.
+   *
+   * Most likely, the project specific one will have an additional option for
+   * "override" or "add" to combine the commandsToRun or only use the project
+   * specific ones.
+   */
   let configPath = configPath != "" ? configPath : getConfigLocation();
 
-  if (configPath != "" && !Sys.file_exists(configPath)) {
+  if (!Sys.file_exists(configPath)) {
     let defaultJson = Yojson.Safe.from_string(defaultJsonString);
     Yojson.Safe.to_file(configPath, defaultJson);
   };
+};
+
+let loadConfig = configPath => {
+  let configPath = configPath != "" ? configPath : getConfigLocation();
+
+  /* Make the default config if its needed. */
+  makeDefaultConfig(configPath);
 
   switch (Yojson.Safe.from_file(configPath) |> of_yojson) {
   | Ok(config) => config

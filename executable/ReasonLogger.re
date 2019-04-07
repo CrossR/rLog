@@ -3,9 +3,10 @@
  *
  * Main entry point for the CLI app.
  */
+open ReasonLoggerLib;
 
 let logAndRun = () => {
-  let args = ReasonLoggerLib.Cli.getArgs();
+  let args = Cli.getArgs();
   let logMsg = message => args.verbose^ ? Console.log(message) : ();
 
   logMsg("Full passed arguments are: ");
@@ -13,13 +14,17 @@ let logAndRun = () => {
 
   let finished = ref(false);
 
-  if (args.showHelp^ || List.length(args.restOfCLI^) == 0) {
+  if (args.showHelp^) {
     finished := true;
   };
 
-  if (! finished^) {
-    let _ = ReasonLoggerLib.Runner.start(args, logMsg);
+  let shouldRun = Cli.isRun(args) && List.length(args.restOfCLI^) > 0;
+
+  if (shouldRun && ! finished^) {
+    let _ = Runner.start(args, logMsg);
     ();
+  } else if (args.command == Util.CommandType.GenerateConfig) {
+    Config.makeDefaultConfig(args.configPath^);
   };
   /* I should return the main command error code here */
 };

@@ -9,6 +9,7 @@ type t = {
   verbose: ref(bool),
   configPath: ref(string),
   restOfCLI: ref(list(string)),
+  mutable command: Util.CommandType.t,
 };
 
 let default = {
@@ -16,6 +17,7 @@ let default = {
   verbose: ref(false),
   configPath: ref(""),
   restOfCLI: ref([]),
+  command: Util.CommandType.Run,
 };
 
 let missingCommand = "reasonLogger must be called with -- followed by the command to be ran!";
@@ -41,10 +43,15 @@ Flags:
 let argList = cliObj => {
   /* Space at the start of every string so the Arg.align works */
   Arg.align([
+    (
+      "genconfig",
+      Arg.Unit(() => ()),
+      " Generate a config file in the default or given location.",
+    ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
     (
-      "--config",
+      "--config-path",
       Arg.Set_string(cliObj.configPath),
       " Provide a custom configuration file location.",
     ),
@@ -58,19 +65,28 @@ let argList = cliObj => {
   ]);
 };
 
+let dealWithAnonArgs = (arg, cliObj) => {
+  let findResult = Util.CommandType.checkArg(arg);
+
+  switch (findResult) {
+  | Some(command) => cliObj.command = command
+  | None => raise(Arg.Bad("Unknown argument: " ++ arg))
+  };
+};
+
+let isRun = cliObj => cliObj.command == Util.CommandType.Run;
+let isConfigGen = cliObj => cliObj.command == Util.CommandType.GenerateConfig;
+let isSearch = cliObj => cliObj.command == Util.CommandType.Search;
+
 let getArgs = () => {
   let cliObj = default;
-  Arg.parse(
-    argList(cliObj),
-    x => raise(Arg.Bad("Unknown argument: " ++ x)),
-    helpText,
-  );
+  Arg.parse(argList(cliObj), x => dealWithAnonArgs(x, cliObj), helpText);
 
   if (cliObj.showHelp^) {
     Arg.usage(argList(cliObj), helpText);
   };
 
-  if (List.length(cliObj.restOfCLI^) == 0) {
+  if (isRun(cliObj) && List.length(cliObj.restOfCLI^) == 0) {
     Console.error(missingCommand);
   };
 
