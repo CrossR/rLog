@@ -64,7 +64,7 @@ given.)
 
 Stuff to do:
 
- - [ ] Make a release, so I have a binary.
+ - [X] Make a release, so I have a binary.
  - [X] Return the ran commands status code.
  - [X] Implement the project specific config.
  - [ ] Add a search command (to dump out all commands, for use with FZF etc).
