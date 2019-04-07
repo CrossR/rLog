@@ -5,46 +5,26 @@
   "esy": {
     "build": "pesy",
     "buildsInSource": "_build",
-    "release": {
-      "releasedBinaries": [
-        "reasonLogger.exe"
-      ]
-    }
+    "release": { "releasedBinaries": [ "reasonLogger.exe" ] }
   },
   "buildDirs": {
     "test": {
-      "require": [
-        "reason-logger.lib",
-        "rely.lib"
-      ],
+      "require": [ "reason-logger.lib", "rely.lib" ],
       "main": "RunTestsCI",
       "name": "RunTests.exe",
-      "ocamloptFlags": [
-        "-linkall",
-        "-g"
-      ]
+      "ocamloptFlags": [ "-linkall", "-g" ]
     },
     "library": {
-      "preprocess": [
-        "pps",
-        "ppx_deriving",
-        "ppx_deriving_yojson"
-      ],
+      "preprocess": [ "pps", "ppx_deriving", "ppx_deriving_yojson" ],
       "require": [
-        "str",
-        "console.lib",
-        "parmap",
-        "yojson",
-        "ppx_deriving.runtime",
+        "str", "console.lib", "parmap", "yojson", "ppx_deriving.runtime",
         "ppx_deriving_yojson.runtime"
       ],
       "name": "reason-logger.lib",
       "namespace": "ReasonLoggerLib"
     },
     "executable": {
-      "require": [
-        "reason-logger.lib"
-      ],
+      "require": [ "reason-logger.lib" ],
       "main": "ReasonLogger",
       "name": "reasonLogger.exe"
     }
@@ -66,9 +46,8 @@
     "@reason-native/console": "^0.1.0",
     "@reason-native/rely": "^1.3.1",
     "ocaml": "^4.4.0",
+    "pesy": "^0.4.1",
     "refmterr": "*"
   },
-  "devDependencies": {
-    "@opam/merlin": "*"
-  }
+  "devDependencies": { "@opam/merlin": "*" }
 }
