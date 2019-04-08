@@ -35,7 +35,7 @@ let getLogFilePath = (job, config) => {
   checkFolderExists(config.outputPath);
   checkFolderExists(outputFolder);
 
-  join([outputFolder, job ++ "_" ++ getFormattedTime() ++ ".log"]);
+  join([outputFolder, getFormattedTime() ++ "_" ++ job ++ ".log"]);
 };
 
 let writeFile = (path, stringList) => {
