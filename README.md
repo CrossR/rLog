@@ -50,7 +50,9 @@ Where:
     that is especially important to log. For example `echo "@LOG@: Cosmics
     disabled"` will cause `Cosmics disabled` to appear in the metadata log
     file separately, so it is more easily found. These values can be printed
-    in anyway, as long as they appear in the terminal `stdout`/`stderr`.
+    in anyway, as long as they appear in the terminal `stdout`/`stderr`. This
+    must be explicitly enabled by passing `-p` or `--parse` to the CLI, since
+    it can slow down commands considerably.
 
 ## Usage
 

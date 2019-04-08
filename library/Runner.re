@@ -37,7 +37,21 @@ let start = (~silent=false, args, logMsg) => {
 
   logMsg("Staring command runner...");
   let silent = silent || args.silent^;
-  let commandOutputs = Command.runMultipleCommand(~silent, ~config, cmds);
+  let logFile = Logging.getLogFilePath("cmd", config);
+
+  let commandOutputs =
+    Command.runMultipleCommand(~silent, ~logFile, ~config, cmds);
+
+  let enableParsing = args.enableOutputParsing^;
+
+  List.nth(commandOutputs, 0).linesOfInterest = (
+    if (enableParsing) {
+      Logging.parseCmdOutput(config, logFile);
+    } else {
+      [];
+    }
+  );
+
   Logging.makeLogFile(commandOutputs, config, logMsg);
 
   List.nth(commandOutputs, 0).status;

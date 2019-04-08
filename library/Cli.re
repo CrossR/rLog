@@ -11,6 +11,7 @@ type t = {
   configPath: ref(string),
   restOfCLI: ref(list(string)),
   mutable command: Util.CommandType.t,
+  enableOutputParsing: ref(bool),
 };
 
 let default = {
@@ -20,6 +21,7 @@ let default = {
   silent: ref(false),
   restOfCLI: ref([]),
   command: Util.CommandType.Run,
+  enableOutputParsing: ref(false),
 };
 
 let missingCommand = "rLog must be called with -- followed by the command to be ran!";
@@ -52,6 +54,12 @@ let argList = cliObj => {
     ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
+    ("--parse", Arg.Set(cliObj.enableOutputParsing), " "),
+    (
+      "-p",
+      Arg.Set(cliObj.enableOutputParsing),
+      " Enable line parsing, to look for lines of interest.",
+    ),
     (
       "-s",
       Arg.Set(cliObj.silent),

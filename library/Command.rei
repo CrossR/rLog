@@ -13,6 +13,15 @@ type t = {
 };
 
 let default: string => t;
-let runCmd: (~runSilently: bool=?, ~config: Config.t=?, string) => t;
+let runCmd:
+  (
+    ~storeOutput: bool=?,
+    ~runSilently: bool=?,
+    ~config: Config.t=?,
+    ~logFile: string=?,
+    string
+  ) =>
+  t;
 let runMultipleCommand:
-  (~silent: bool=?, ~config: Config.t, list(string)) => list(t);
+  (~silent: bool=?, ~logFile: string=?, ~config: Config.t, list(string)) =>
+  list(t);

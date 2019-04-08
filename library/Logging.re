@@ -29,7 +29,7 @@ let getFormattedTime = (~time=Unix.time(), ()) => {
   getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
 };
 
-let getLogFile = (job, config) => {
+let getLogFilePath = (job, config) => {
   let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
 
   checkFolderExists(config.outputPath);
@@ -142,14 +142,51 @@ let makeMetaData = (output: list(Command.t)) => {
   };
 };
 
-let makeLogFile = (output: list(Command.t), config, logMsg) => {
-  let mainLogFile = getLogFile("cmd", config);
-  logMsg("Logging command output to " ++ mainLogFile);
-  let metadataLogFile = getLogFile("meta", config);
-  logMsg("Logging command metadata to " ++ metadataLogFile);
+let parseLine = (i, line, linesOfInterest, config) => {
+  let line = ref(line);
+  let valuesToLog = config.valuesToLog;
 
-  logMsg("Writing main log file...");
-  writeFile(mainLogFile, List.nth(output, 0).outputLines);
+  for (j in 0 to List.length(valuesToLog) - 1) {
+    let currentRegex = Str.regexp(Str.quote(List.nth(valuesToLog, j)));
+
+    if (Str.string_match(currentRegex, line^, 0)) {
+      let subStart = Str.match_end();
+      line := String.sub(line^, subStart, String.length(line^) - subStart);
+      linesOfInterest := List.append(linesOfInterest^, [(i^ + 1, line^)]);
+    };
+  };
+
+  i := i^ + 1;
+};
+
+let parseCmdOutput = (config, logFilePath) => {
+  let fileInput = open_in(logFilePath);
+  let i = ref(0);
+  let linesOfInterest = ref([]);
+
+  Stream.from(_ =>
+    try (Some(input_line(fileInput))) {
+    | End_of_file => None
+    }
+  )
+  |> (
+    stream =>
+      try (
+        Stream.iter(
+          line => parseLine(i, line, linesOfInterest, config),
+          stream,
+        )
+      ) {
+      | _error => close_in(fileInput)
+      }
+  );
+
+  linesOfInterest^;
+};
+
+let makeLogFile = (output: list(Command.t), config, logMsg) => {
+  let metadataLogFile = getLogFilePath("meta", config);
+  logMsg("Logging command metadata to " ++ metadataLogFile);
 
   logMsg("Builiding metadata markdown file...");
   let commandMetadata = makeMetaData(output);

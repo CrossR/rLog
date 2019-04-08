@@ -20,56 +20,34 @@ let default = command => {
   runningTime: 0.0,
 };
 
-let parseLine = (runSilently, line, commandOutput) => {
+let parseLine = (storeOutput, runSilently, line, commandOutput) => {
   /*
-   * Parse a line for printing and storing.
+   * Parse a line for printing, if needed
    */
-
   if (!runSilently) {
     Console.log(line);
   };
 
-  commandOutput.outputLines = List.append(commandOutput.outputLines, [line]);
-};
-
-let checkForLinesOfInterest = (commandOutput, valuesToLog) => {
-  /*
-   * Parse all the lines of the command to find any of special interest.
-   */
-
-  let linesOfInterest = ref([]);
-  let formattedLines = ref([]);
-
-  for (i in 0 to List.length(commandOutput.outputLines) - 1) {
-    let line = ref(List.nth(commandOutput.outputLines, i));
-
-    for (j in 0 to List.length(valuesToLog) - 1) {
-      let currentRegex = Str.regexp(Str.quote(List.nth(valuesToLog, j)));
-
-      if (Str.string_match(currentRegex, line^, 0)) {
-        let subStart = Str.match_end();
-        line := String.sub(line^, subStart, String.length(line^) - subStart);
-        linesOfInterest := List.append(linesOfInterest^, [(i + 1, line^)]);
-      };
-    };
-
-    formattedLines := List.append(formattedLines^, [line^]);
+  if (storeOutput) {
+    commandOutput.outputLines = [line, ...commandOutput.outputLines];
   };
-
-  commandOutput.outputLines = formattedLines^;
-  commandOutput.linesOfInterest = linesOfInterest^;
-
-  commandOutput;
 };
 
-let wrapCommand = command => {
-  command ++ " 2>&1";
+let wrapCommand = (command, logFile) => {
+  logFile == "" ? command ++ " 2>&1" : command ++ " 2>&1 | tee -a " ++ logFile;
 };
 
-let runCmd = (~runSilently=false, ~config=Config.default, command) => {
+let runCmd =
+    (
+      ~storeOutput=false,
+      ~runSilently=false,
+      ~config=Config.default,
+      ~logFile="",
+      command,
+    ) => {
   let startTime = Unix.gettimeofday();
-  let inChannel = wrapCommand(command) |> Unix.open_process_in;
 
+  let inChannel = wrapCommand(command, logFile) |> Unix.open_process_in;
   let commandOutput = default(command);
 
   Stream.from(_ =>
@@ -82,7 +60,7 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
     stream =>
       try (
         Stream.iter(
-          line => parseLine(runSilently, line, commandOutput),
+          line => parseLine(storeOutput, runSilently, line, commandOutput),
           stream,
         )
       ) {
@@ -91,18 +69,40 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   );
 
   commandOutput.status = Some(Unix.close_process_in(inChannel));
+
   let endTime = Unix.gettimeofday();
   commandOutput.runningTime = endTime -. startTime;
 
-  checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
+  /* Fix the backwards output array. */
+  if (commandOutput.outputLines != []) {
+    commandOutput.outputLines = List.rev(commandOutput.outputLines);
+  };
+
+  commandOutput;
 };
 
 let runMultipleCommand =
-    (~silent=false, ~config, listOfCommands: list(string)) => {
+    (~silent=false, ~logFile="", ~config, listOfCommands: list(string)) => {
   let parMapList = Parmap.L(listOfCommands);
+
+  /* Run all but the main command silently, unless explicity silent. */
   let runSilently = i => silent ? true : i != 0;
+
+  /* Only give a log file for the first command. */
+  let getLogFilePath = i => i == 0 ? logFile : "";
+
+  /* Store output for all commands except the first, to help with performance. */
+  let storeOutput = i => i == 0 ? false : true;
+
   Parmap.parmapi(
-    (i, c) => runCmd(~config, ~runSilently=runSilently(i), c),
+    (i, c) =>
+      runCmd(
+        ~storeOutput=storeOutput(i),
+        ~runSilently=runSilently(i),
+        ~logFile=getLogFilePath(i),
+        ~config,
+        c,
+      ),
     parMapList,
   );
 };

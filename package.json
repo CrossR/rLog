@@ -33,7 +33,7 @@
     "pesy": "bash -c 'env PESY_MODE=update pesy'",
     "test": "esy x RunTests.exe",
     "run": "esy x rLog.exe",
-    "format": "bash -c 'refmt --in-place {library,executable,test}/*.re'"
+    "format": "bash -c 'refmt --in-place {library,executable,test}/*.re*'"
   },
   "license": "MIT",
   "dependencies": {
