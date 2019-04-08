@@ -66,7 +66,13 @@ let formatLinesOfInterest = (command: Command.t) =>
 
 let formatSubCommand = (command: Command.t) => {
   combineLists([
-    ["### " ++ code(command.command), ""],
+    [
+      "### " ++ code(command.command),
+      "",
+      processStatus(command.status),
+      "Time Taken: " ++ string_of_float(command.runningTime),
+      "",
+    ],
     codeBlock(command.outputLines),
     [""],
   ]);
@@ -83,6 +89,7 @@ let formatSubCommand = (command: Command.t) => {
  * ## Result
  *
  * Return Code: X
+ * Time taken: X
  *
  * Logged output:
  *  Line X: Y
@@ -92,9 +99,15 @@ let formatSubCommand = (command: Command.t) => {
  *
  * ### cmd1
  *
+ * Return Code: X
+ * Time taken: X
+ *
  * Output for cmd1
  *
  * ### cmd2
+ *
+ * Return Code: X
+ * Time taken: X
  *
  * Output for cmd2
  */
@@ -107,7 +120,8 @@ let makeMetaData = (output: list(Command.t)) => {
     "",
     header(2, "Result"),
     "",
-    processMessage(mainCommand.status),
+    processStatus(mainCommand.status),
+    "Time Taken: " ++ string_of_float(mainCommand.runningTime),
     "",
     ...formatLinesOfInterest(mainCommand),
   ];

@@ -9,6 +9,7 @@ type t = {
   mutable outputLines: list(string),
   mutable linesOfInterest: list((int, string)),
   mutable status: option(Unix.process_status),
+  mutable runningTime: float,
 };
 
 let default = command => {
@@ -16,6 +17,7 @@ let default = command => {
   outputLines: [],
   linesOfInterest: [],
   status: None,
+  runningTime: 0.0,
 };
 
 let parseLine = (runSilently, line, commandOutput) => {
@@ -65,6 +67,7 @@ let wrapCommand = command => {
 };
 
 let runCmd = (~runSilently=false, ~config=Config.default, command) => {
+  let startTime = Unix.gettimeofday();
   let inChannel = wrapCommand(command) |> Unix.open_process_in;
 
   let commandOutput = default(command);
@@ -88,6 +91,8 @@ let runCmd = (~runSilently=false, ~config=Config.default, command) => {
   );
 
   commandOutput.status = Some(Unix.close_process_in(inChannel));
+  let endTime = Unix.gettimeofday();
+  commandOutput.runningTime = endTime -. startTime;
 
   checkForLinesOfInterest(commandOutput, Config.(config.valuesToLog));
 };

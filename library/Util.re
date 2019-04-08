@@ -62,7 +62,7 @@ let leftPadString = (~inputString, ~len, ~padding) => {
 
 let code = str => "`" ++ str ++ "`";
 
-let processMessage = (status: option(Unix.process_status)) => {
+let processStatus = (status: option(Unix.process_status)) => {
   switch (status) {
   | Some(WEXITED(code)) => "Exit Code: " ++ string_of_int(code)
   | Some(WSIGNALED(code)) =>

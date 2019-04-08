@@ -9,6 +9,7 @@ type t = {
   mutable outputLines: list(string),
   mutable linesOfInterest: list((int, string)),
   mutable status: option(Unix.process_status),
+  mutable runningTime: float,
 };
 
 let default: string => t;
