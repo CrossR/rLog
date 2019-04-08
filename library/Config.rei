@@ -13,4 +13,4 @@ type t = {
 
 let default: t;
 let makeDefaultConfig: string => unit;
-let getConfig: list(string) => t;
+let getConfig: (list(string), string => unit) => t;

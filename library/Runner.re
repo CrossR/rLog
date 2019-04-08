@@ -24,11 +24,9 @@ let getConfigPaths = args => {
 };
 
 let start = (~silent=false, args, logMsg) => {
-  logMsg("Loading config from:");
   let configPaths = getConfigPaths(args);
-  List.iter(p => logMsg("    " ++ p), configPaths);
 
-  let config = Config.getConfig(configPaths);
+  let config = Config.getConfig(configPaths, logMsg);
 
   let cmd = String.concat(" ", args.restOfCLI^);
   logMsg("Command to be run is: " ++ cmd);

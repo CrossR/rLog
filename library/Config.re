@@ -101,14 +101,17 @@ let combineProjectConfig = (main, project) => {
   main;
 };
 
-let getConfig = configPaths => {
+let getConfig = (configPaths, logMsg) => {
   /* Get the main defualt config */
+  logMsg("Loading config from:");
   let configPath = List.nth(configPaths, 0);
   let mainConfig = ref(loadConfig(configPath));
+  logMsg("    " ++ configPath);
 
   if (mainConfig^.loadLocalCommands) {
     for (i in 1 to List.length(configPaths) - 1) {
       let configPath = List.nth(configPaths, i);
+      logMsg("    " ++ configPath);
       let config = loadProjectConfig(configPath);
 
       mainConfig :=
