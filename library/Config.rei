@@ -14,3 +14,4 @@ type t = {
 let default: t;
 let makeDefaultConfig: string => unit;
 let getConfig: (list(string), string => unit) => t;
+let getConfigLocation: unit => string;

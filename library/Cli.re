@@ -16,8 +16,8 @@ type t = {
 let default = {
   showHelp: ref(false),
   verbose: ref(false),
+  configPath: ref(Config.getConfigLocation()),
   silent: ref(false),
-  configPath: ref(""),
   restOfCLI: ref([]),
   command: Util.CommandType.Run,
 };

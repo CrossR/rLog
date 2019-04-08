@@ -54,6 +54,7 @@ let saveConfig = (configPath, config) =>
 let makeDefaultConfig = configPath => {
   let configPath =
     configPath != "" ? checkConfigPath(configPath) : getConfigLocation();
+  Util.checkPathExists(configPath);
 
   if (!Sys.file_exists(configPath)) {
     let defaultJson = Yojson.Safe.from_string(defaultJsonString);
@@ -105,6 +106,8 @@ let getConfig = (configPaths, logMsg) => {
   /* Get the main defualt config */
   logMsg("Loading config from:");
   let configPath = List.nth(configPaths, 0);
+  Util.checkPathExists(configPath);
+
   let mainConfig = ref(loadConfig(configPath));
   logMsg("    " ++ configPath);
 

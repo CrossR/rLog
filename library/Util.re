@@ -51,6 +51,21 @@ let checkFolderExists = path => {
   };
 };
 
+let checkPathExists = path => {
+  let absPath = makeAbsolutePath(path);
+
+  let fileSep = Str.regexp(Filename.dir_sep);
+  let splitPath = Str.split(fileSep, absPath);
+
+  let firstPathSep = Str.search_forward(fileSep, absPath, 1);
+  let path = ref(String.sub(absPath, 0, firstPathSep));
+
+  for (i in 1 to List.length(splitPath) - 1) {
+    checkFolderExists(path^);
+    path := join([path^, List.nth(splitPath, i)]);
+  };
+};
+
 let leftPadString = (~inputString, ~len, ~padding) => {
   let paddedString = ref(inputString);
   while (String.length(paddedString^) < len) {
