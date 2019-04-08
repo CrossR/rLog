@@ -7,6 +7,7 @@
 type t = {
   showHelp: ref(bool),
   verbose: ref(bool),
+  silent: ref(bool),
   configPath: ref(string),
   restOfCLI: ref(list(string)),
   mutable command: Util.CommandType.t,
@@ -15,6 +16,7 @@ type t = {
 let default = {
   showHelp: ref(false),
   verbose: ref(false),
+  silent: ref(false),
   configPath: ref(""),
   restOfCLI: ref([]),
   command: Util.CommandType.Run,
@@ -50,6 +52,11 @@ let argList = cliObj => {
     ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
+    (
+      "-s",
+      Arg.Set(cliObj.silent),
+      " Enable silent mode, no output is printed for any command.",
+    ),
     (
       "--config-path",
       Arg.Set_string(cliObj.configPath),

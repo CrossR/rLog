@@ -38,6 +38,7 @@ let start = (~silent=false, args, logMsg) => {
   List.iter(c => logMsg("    " ++ c), cmds);
 
   logMsg("Staring command runner...");
+  let silent = silent || args.silent^;
   let commandOutputs = Command.runMultipleCommand(~silent, ~config, cmds);
   Logging.makeLogFile(commandOutputs, config, logMsg);
 
