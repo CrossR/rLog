@@ -1,3 +1,15 @@
+## v0.1.2
+
+#### Features
+
+   - Add `link` command, to link the last `rLog run` run to any given output files.
+     This also lets commands be ran at the end of the process. This will be easier
+     once I add variable syntax. (#15)
+
+#### Fixes
+
+   - Refactor and tidy up. (#14)
+
 ## v0.1.1
 
 #### Features

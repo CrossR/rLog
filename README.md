@@ -29,7 +29,8 @@ Configuration is achieved with a `config.json` in `~/.config/rLog/`:
 ```json
 {
     "outputPath": "~/rLogOut",
-    "commandsToRun": [],
+    "logCommands": [],
+    "linkCommands": [],
     "loadLocalCommands": false,
     "valuesToLog": ["@LOG@: "]
 }
@@ -38,11 +39,12 @@ Configuration is achieved with a `config.json` in `~/.config/rLog/`:
 Where:
 
  - `outputPath` is the folder log files will be stored in.
- - `commandsToRun` is the additional logging commands to run.
+ - `logCommands` is the additional logging commands to run.
+ - `linkCommands` is the commands to run when calling `rLog link`.
  - `localLocalCommands` enables the ability to use a per project config file.
     This will cause `rLog` to load a local `config.json`, if there is
     one in the current directory. It will also attempt to get one from the `git`
-    root, if one exists. Any values in the `commandsToRun` and `valuesToLog`
+    root, if one exists. Any values in the `logCommands` and `valuesToLog`
     will be combined, but the `outputPath` will be overridden. The override
     order is Current directory > Project > Global, so the current folder config
     has the highest priority.
@@ -56,7 +58,14 @@ Where:
 
 ## Usage
 
-Usage should just be `rLog -- commandToRun`.
+Usage should just be `rLog -- commandToRun`, to run `commandToRun` and have
+it logged to the location outlined in the config file, with the `logCommands`
+ran to produce metadata for that command.
+
+`rLog link -- output1.txt` can be used to link to the most recent run. Link
+in this context will create a symlink to a new `output` file, which will run
+any of the `linkCommands`, as well as giving an easy way of accessing the
+command output and metadata output.
 
 `rLog genconfig` will generate a default config file in
 `~/.config/rLog` (or in a custom location if `--config-path` is
@@ -70,7 +79,7 @@ Stuff to do:
  - [X] Return the ran commands status code.
  - [X] Implement the project specific config.
  - [ ] Add a search command (to dump out all commands, for use with FZF etc).
- - [ ] Add command to get a link to the most recent config (so then I can do
+ - [X] Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `rLog link` and have a link to the
     log file in the data location too).
  - [ ] Add a variable syntax to the commands (so I can define dynamic

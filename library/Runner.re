@@ -32,7 +32,7 @@ let start = (~silent=false, args, logMsg) => {
   let cmd = String.concat(" ", args.restOfCLI^);
   logMsg("Command to be run is: " ++ cmd);
 
-  let cmds = [cmd, ...config.commandsToRun];
+  let cmds = [cmd, ...config.logCommands];
   logMsg("Total command list is: ");
   List.iter(c => logMsg("    " ++ c), cmds);
 
@@ -55,4 +55,26 @@ let start = (~silent=false, args, logMsg) => {
   Logging.makeLogFile(commandOutputs, config, logMsg);
 
   List.nth(commandOutputs, 0).status;
+};
+
+let link = (args, logMsg) => {
+  let configPaths = getConfigPaths(args);
+  let config = Config.getConfig(configPaths, logMsg);
+
+  let latestLogFile = Logging.getLastLogFilePath(config.outputPath, logMsg);
+  let logFilePath =
+    switch (latestLogFile) {
+    | Some(path) => path
+    | None => ""
+    };
+
+  let isMetadataPath =
+    Str.string_match(Str.regexp({|.*meta\.log|}), logFilePath, 0);
+
+  if (logFilePath != "" && isMetadataPath) {
+    Logging.linkOutputToLogFile(logFilePath, config, args.restOfCLI^, logMsg);
+  } else {
+    Console.error("An output file for the previous run exists...");
+    Console.error("Use the -f flag if you are sure you want to do this.");
+  };
 };

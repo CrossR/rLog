@@ -21,10 +21,12 @@ module Command = {
     runningTime: 0.0,
   };
 };
+
 module CommandType = {
   type t =
     | Run
     | GenerateConfig
+    | Link
     | Search;
 
   let checkArg = str => {
@@ -32,6 +34,7 @@ module CommandType = {
     | "run" => Some(Run)
     | "genconfig" => Some(GenerateConfig)
     | "search" => Some(Search)
+    | "link" => Some(Link)
     | _ => None
     };
   };
@@ -64,8 +67,10 @@ module Config = {
   type t = {
     [@key "outputPath"]
     mutable outputPath: string,
-    [@key "commandsToRun"]
-    mutable commandsToRun: list(string),
+    [@key "logCommands"]
+    mutable logCommands: list(string),
+    [@key "linkCommands"]
+    mutable linkCommands: list(string),
     [@key "loadLocalCommands"]
     loadLocalCommands: bool,
     [@key "valuesToLog"]
@@ -74,7 +79,8 @@ module Config = {
 
   let default = {
     outputPath: "~/rLogOut",
-    commandsToRun: [],
+    logCommands: [],
+    linkCommands: [],
     loadLocalCommands: false,
     valuesToLog: ["@LOG@: "],
   };
@@ -82,7 +88,8 @@ module Config = {
   let defaultJsonString = {
     {|{
     "outputPath": "~/rLogOut",
-    "commandsToRun": [],
+    "logCommands": [],
+    "linkCommands": [],
     "loadLocalCommands": false,
     "valuesToLog": ["@LOG@: "]
 }|};

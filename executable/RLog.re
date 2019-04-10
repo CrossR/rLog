@@ -44,6 +44,8 @@ let getArgsAndRun = () => {
     exitCode := logAndRun(args, logMsg);
   } else if (args.command == Types.CommandType.GenerateConfig) {
     Config.makeDefaultConfig(args.configPath^);
+  } else if (args.command == Types.CommandType.Link) {
+    Runner.link(args, logMsg);
   };
 
   exit(exitCode^);

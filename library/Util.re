@@ -15,7 +15,7 @@ let leftPadString = (~inputString, ~len, ~padding) => {
 
 let padDate = str => leftPadString(~inputString=str, ~len=2, ~padding="0");
 
-let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
+let getDate = (~time=Unix.gmtime(Unix.gettimeofday()), ()) => {
   string_of_int(time.tm_year + 1900)
   ++ "-"
   ++ padDate(string_of_int(time.tm_mon + 1))
@@ -23,7 +23,7 @@ let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
   ++ padDate(string_of_int(time.tm_mday));
 };
 
-let getTime = (~time=Unix.gmtime(Unix.time()), ()) => {
+let getTime = (~time=Unix.gmtime(Unix.gettimeofday()), ()) => {
   padDate(string_of_int(time.tm_hour))
   ++ ":"
   ++ padDate(string_of_int(time.tm_min))
@@ -31,7 +31,7 @@ let getTime = (~time=Unix.gmtime(Unix.time()), ()) => {
   ++ padDate(string_of_int(time.tm_sec));
 };
 
-let getFormattedTime = (~time=Unix.time(), ()) => {
+let getFormattedTime = (~time=Unix.gettimeofday(), ()) => {
   let time = Unix.gmtime(time);
   getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
 };

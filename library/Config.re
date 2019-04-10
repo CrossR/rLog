@@ -60,11 +60,14 @@ let loadProjectConfig = path => {
 
 let combineProjectConfig = (main, project) => {
   /* Combine the commands and logger values */
-  let jointCommands = List.append(main.commandsToRun, project.commandsToRun);
-  main.commandsToRun = List.sort_uniq(compare, jointCommands);
+  let jointCommands = List.append(main.logCommands, project.logCommands);
+  main.logCommands = List.sort_uniq(compare, jointCommands);
 
   let jointLogging = List.append(main.valuesToLog, project.valuesToLog);
   main.valuesToLog = List.sort_uniq(compare, jointLogging);
+
+  let jointLink = List.append(main.linkCommands, project.linkCommands);
+  main.linkCommands = List.sort_uniq(compare, jointLink);
 
   /* Override the output path to a project specific one, if set */
   if (project.outputPath != "") {

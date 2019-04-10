@@ -90,3 +90,25 @@ let writeFile = (path, stringList) => {
 
   writeStringListToFile(fileOut, stringList);
 };
+
+let getMostRecentFromFolder = (path, shouldBeDirectory) => {
+  let absPath = makeAbsolutePath(path);
+  let contents = ref(Array.to_list(Sys.readdir(absPath)));
+
+  if (contents^ == []) {
+    None;
+  } else {
+    if (shouldBeDirectory) {
+      contents :=
+        List.filter(c => Sys.is_directory(join([absPath, c])), contents^);
+    };
+    contents := List.sort((a, b) => compare(a, b), contents^);
+    let mostRecent = List.nth(contents^, List.length(contents^) - 1);
+    let result = join([absPath, mostRecent]);
+    Some(result);
+  };
+};
+
+let makeLink = (path, fileName) => {
+  Unix.symlink(path, fileName);
+};

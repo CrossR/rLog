@@ -34,6 +34,11 @@ let argList = cliObj => {
       Arg.Unit(() => ()),
       " Generate a config file in the default or given location.",
     ),
+    (
+      "link",
+      Arg.Unit(() => ()),
+      " Link the passed data file(s) to the previous run.",
+    ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
     ("--parse", Arg.Set(cliObj.enableOutputParsing), " "),

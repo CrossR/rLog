@@ -1,9 +1,10 @@
 {
     "outputPath": "/tmp/rLogOut",
-    "commandsToRun": [
+    "logCommands": [
         "bash test/assets/std_err.sh",
         "bash test/assets/std_out.sh"
     ],
+    "linkCommands": [],
     "loadLocalCommands": false,
     "valuesToLog": [
         "@LOG@: "

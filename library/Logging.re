@@ -4,9 +4,11 @@
  * Various utilities to logging the output of commands.
  */
 
-open Types.Config;
 open PathUtil;
 open Util;
+
+open Types.Config;
+open Types.Command;
 
 let getLogFilePath = (job, config) => {
   let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
@@ -26,7 +28,20 @@ let formatLinesOfInterest = (command: Types.Command.t) =>
         a => "    - Line " ++ string_of_int(fst(a)) ++ ": " ++ snd(a),
         command.linesOfInterest,
       );
-    combineLists([["Logged Output:", ""], formattedLinesOfInterest, [""]]);
+    combineLists([
+      ["### Logged Output", ""],
+      formattedLinesOfInterest,
+      [""],
+    ]);
+  };
+
+let formatOutputFiles = outputFiles =>
+  if (outputFiles == []) {
+    [];
+  } else {
+    let formattedLinesOfInterest =
+      List.map(a => "    - " ++ makeAbsolutePath(a), outputFiles);
+    combineLists([["## Output Files", ""], formattedLinesOfInterest, [""]]);
   };
 
 let formatSubCommand = (command: Types.Command.t) => {
@@ -41,6 +56,19 @@ let formatSubCommand = (command: Types.Command.t) => {
     codeBlock(command.outputLines),
     [""],
   ]);
+};
+
+let formatSubCommands = (output, start) => {
+  let subCommands = ref([]);
+
+  for (i in start to List.length(output) - 1) {
+    let currentSubCommand = List.nth(output, i);
+    let metadata = formatSubCommand(currentSubCommand);
+
+    subCommands := List.append(subCommands^, metadata);
+  };
+
+  subCommands^;
 };
 
 /*
@@ -91,19 +119,12 @@ let makeMetaData = (output: list(Types.Command.t)) => {
     ...formatLinesOfInterest(mainCommand),
   ];
 
-  let subCommands = ref([]);
+  let subCommands = formatSubCommands(output, 1);
 
-  for (i in 1 to List.length(output) - 1) {
-    let currentSubCommand = List.nth(output, i);
-    let metadata = formatSubCommand(currentSubCommand);
-
-    subCommands := List.append(subCommands^, metadata);
-  };
-
-  if (List.length(subCommands^) == 0) {
+  if (List.length(subCommands) == 0) {
     mainCommandOutput;
   } else {
-    List.append(mainCommandOutput, subCommands^);
+    List.append(mainCommandOutput, subCommands);
   };
 };
 
@@ -157,5 +178,89 @@ let makeLogFile = (output: list(Types.Command.t), config, logMsg) => {
   let commandMetadata = makeMetaData(output);
 
   logMsg("Writing metadata log file...");
-  PathUtil.writeFile(metadataLogFile, commandMetadata);
+  writeFile(metadataLogFile, commandMetadata);
+};
+
+let getLastLogFilePath = (logOutputPath, logMsg) => {
+  let absPath = makeAbsolutePath(logOutputPath);
+  logMsg("Checking " ++ absPath);
+  let mostRecentDateFolder = getMostRecentFromFolder(absPath, true);
+
+  let folderToCheck =
+    switch (mostRecentDateFolder) {
+    | Some(path) => path
+    | None => ""
+    };
+
+  if (folderToCheck == "") {
+    None;
+  } else {
+    let mostRecentLogFile = getMostRecentFromFolder(folderToCheck, false);
+    switch (mostRecentLogFile) {
+    | Some(path) => Some(path)
+    | None => None
+    };
+  };
+};
+
+/* Ie every line up to lines of interest. */
+let logFileHeaderLen = 7;
+
+let getCurrentHeader = (path, config, logMsg) => {
+  let currentLogFileLines = open_in(makeAbsolutePath(path));
+
+  let i = ref(0);
+  let headerLines = Array.init(logFileHeaderLen, i => "");
+  let getLines = (i, line, headerLines) => {
+    headerLines[i^] = line;
+    i := i^ + 1;
+
+    if (i^ > logFileHeaderLen) {
+      close_in(currentLogFileLines);
+    };
+  };
+
+  Stream.from(_ =>
+    try (Some(input_line(currentLogFileLines))) {
+    | End_of_file => None
+    }
+  )
+  |> (
+    stream =>
+      try (Stream.iter(line => getLines(i, line, headerLines), stream)) {
+      | _error => close_in(currentLogFileLines)
+      }
+  );
+
+  headerLines;
+};
+
+let metadataExtensionLen = 8;
+let pathWithoutType = path =>
+  String.sub(path, 0, String.length(path) - metadataExtensionLen);
+
+let linkOutputToLogFile = (metadataPath, config, outputs, logMsg) => {
+  let currentHeader = getCurrentHeader(metadataPath, config, logMsg);
+  let linkLogFilePath = pathWithoutType(metadataPath) ++ "output.log";
+  let commandOutputPath = pathWithoutType(metadataPath) ++ "output.log";
+  logMsg("Output link file will be " ++ linkLogFilePath);
+
+  logMsg("Running the link commands...");
+  let commandOutput =
+    Command.runMultipleCommand(~silent=true, config.linkCommands);
+  let profileOutput =
+    List.append(
+      formatOutputFiles(outputs),
+      ["## Link Commands", "", ...formatSubCommands(commandOutput, 0)],
+    );
+
+  let linkMetadata =
+    List.append(Array.to_list(currentHeader), profileOutput);
+
+  logMsg("Writing link log file...");
+  writeFile(linkLogFilePath, linkMetadata);
+
+  PathUtil.makeLink(linkLogFilePath, "outputLogFile.log");
+  PathUtil.makeLink(metadataPath, "metadataLogFile.log");
+  PathUtil.makeLink(commandOutputPath, "cmdOutputLogFile.log");
 };
