@@ -4,45 +4,14 @@
  * Configuration file loading and parsing.
  */
 
-[@deriving yojson]
-type t = {
-  [@key "outputPath"]
-  mutable outputPath: string,
-  [@key "commandsToRun"]
-  mutable commandsToRun: list(string),
-  [@key "loadLocalCommands"]
-  loadLocalCommands: bool,
-  [@key "valuesToLog"]
-  mutable valuesToLog: list(string),
-};
-
-let default = {
-  outputPath: "~/rLogOut",
-  commandsToRun: [],
-  loadLocalCommands: false,
-  valuesToLog: ["@LOG@: "],
-};
-
-let defaultJsonString = {
-  {|{
-    "outputPath": "~/rLogOut",
-    "commandsToRun": [],
-    "loadLocalCommands": false,
-    "valuesToLog": ["@LOG@: "]
-}|};
-};
-
-let getConfigLocation = () =>
-  switch (Sys.os_type) {
-  | "Win32" => Util.join([Util.getHome(), "rLog", "config.json"])
-  | _ => Util.join([Util.getHome(), ".config", "rLog", "config.json"])
-  };
+open Types.Config;
+open Types.Command;
 
 let checkConfigPath = path => {
-  let absPath = Util.makeAbsolutePath(path);
+  let absPath = PathUtil.makeAbsolutePath(path);
 
   if (!Str.string_match(Str.regexp(".*\\.json"), absPath, 0)) {
-    Util.join([absPath, "config.json"]);
+    PathUtil.join([absPath, "config.json"]);
   } else {
     absPath;
   };
@@ -53,8 +22,9 @@ let saveConfig = (configPath, config) =>
 
 let makeDefaultConfig = configPath => {
   let configPath =
-    configPath != "" ? checkConfigPath(configPath) : getConfigLocation();
-  Util.checkPathExists(configPath);
+    configPath != ""
+      ? checkConfigPath(configPath) : PathUtil.getConfigLocation();
+  PathUtil.checkPathExists(configPath);
 
   if (!Sys.file_exists(configPath)) {
     let defaultJson = Yojson.Safe.from_string(defaultJsonString);
@@ -63,7 +33,8 @@ let makeDefaultConfig = configPath => {
 };
 
 let loadConfig = configPath => {
-  let configPath = configPath != "" ? configPath : getConfigLocation();
+  let configPath =
+    configPath != "" ? configPath : PathUtil.getConfigLocation();
 
   /* Make the default config if its needed. */
   makeDefaultConfig(configPath);
@@ -72,12 +43,13 @@ let loadConfig = configPath => {
   | Ok(config) => config
   | Error(loc) =>
     Console.log("Error Loc " ++ loc);
-    default;
+    Types.Config.default;
   };
 };
 
 let loadProjectConfig = path => {
-  let currentConfigPath = checkConfigPath(Util.join([path, "config.json"]));
+  let currentConfigPath =
+    checkConfigPath(PathUtil.join([path, "config.json"]));
 
   if (Sys.file_exists(currentConfigPath)) {
     Some(loadConfig(currentConfigPath));
@@ -106,7 +78,7 @@ let getConfig = (configPaths, logMsg) => {
   /* Get the main defualt config */
   logMsg("Loading config from:");
   let configPath = List.nth(configPaths, 0);
-  Util.checkPathExists(configPath);
+  PathUtil.checkPathExists(configPath);
 
   let mainConfig = ref(loadConfig(configPath));
   logMsg("    " ++ configPath);
@@ -128,7 +100,7 @@ let getConfig = (configPaths, logMsg) => {
     };
   };
 
-  if (mainConfig^ == default) {
+  if (mainConfig^ == Types.Config.default) {
     Console.warn("Using default config...");
   };
 

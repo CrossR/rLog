@@ -42,7 +42,7 @@ let getArgsAndRun = () => {
 
   if (shouldRun && ! finished^) {
     exitCode := logAndRun(args, logMsg);
-  } else if (args.command == Util.CommandType.GenerateConfig) {
+  } else if (args.command == Types.CommandType.GenerateConfig) {
     Config.makeDefaultConfig(args.configPath^);
   };
 

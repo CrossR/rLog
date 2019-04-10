@@ -42,8 +42,7 @@ describe("Test basic process launching", ({test, _}) => {
     ];
 
     let expectedResults = [[], range(1, 50), range(1, 50)];
-    let config = RLogLib.Config.default;
-    let results = runMultipleCommand(~silent=true, ~config, cmds);
+    let results = runMultipleCommand(~silent=true, cmds);
 
     for (i in 0 to List.length(results) - 1) {
       let result = List.nth(results, i);

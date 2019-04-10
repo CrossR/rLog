@@ -4,22 +4,12 @@
  * Functions related to running a command and saving its output.
  */
 
-type t = {
-  command: string,
-  mutable outputLines: list(string),
-  mutable linesOfInterest: list((int, string)),
-  mutable status: option(Unix.process_status),
-  mutable runningTime: float,
-};
+open Types.Command;
 
-let default = command => {
-  command,
-  outputLines: [],
-  linesOfInterest: [],
-  status: None,
-  runningTime: 0.0,
-};
-
+/*
+ * Print the results of the command, and store when needed. Storing is only for
+ * the subcommands here, to save performance.
+ */
 let parseLine = (storeOutput, runSilently, line, commandOutput) => {
   /*
    * Parse a line for printing, if needed
@@ -33,18 +23,17 @@ let parseLine = (storeOutput, runSilently, line, commandOutput) => {
   };
 };
 
+/*
+ * For the main command, directly tee its results, else stream them.
+ */
 let wrapCommand = (command, logFile) => {
   logFile == "" ? command ++ " 2>&1" : command ++ " 2>&1 | tee -a " ++ logFile;
 };
 
-let runCmd =
-    (
-      ~storeOutput=false,
-      ~runSilently=false,
-      ~config=Config.default,
-      ~logFile="",
-      command,
-    ) => {
+/*
+ * Run a given command, storing its output or printing if asked.
+ */
+let runCmd = (~storeOutput=false, ~runSilently=false, ~logFile="", command) => {
   let startTime = Unix.gettimeofday();
 
   let inChannel = wrapCommand(command, logFile) |> Unix.open_process_in;
@@ -81,8 +70,13 @@ let runCmd =
   commandOutput;
 };
 
+/*
+ * Run a list of commands in parallel.
+ *
+ * The main command isn't stored, but the rest are.
+ */
 let runMultipleCommand =
-    (~silent=false, ~logFile="", ~config, listOfCommands: list(string)) => {
+    (~silent=false, ~logFile="", listOfCommands: list(string)) => {
   let parMapList = Parmap.L(listOfCommands);
 
   /* Run all but the main command silently, unless explicity silent. */
@@ -100,7 +94,6 @@ let runMultipleCommand =
         ~storeOutput=storeOutput(i),
         ~runSilently=runSilently(i),
         ~logFile=getLogFilePath(i),
-        ~config,
         c,
       ),
     parMapList,

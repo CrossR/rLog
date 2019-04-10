@@ -4,68 +4,6 @@
  * Various utilities to help out both logging and running commands.
  */
 
-open Unix;
-
-let join = paths => {
-  let sep = Filename.dir_sep;
-  let (head, rest) =
-    switch (paths) {
-    | [] => ("", [])
-    | [head, ...rest] => (head, rest)
-    };
-  List.fold_left((accum, p) => accum ++ sep ++ p, head, rest);
-};
-
-let getHome = () => {
-  switch (Sys.getenv_opt("HOME"), Sys.os_type) {
-  | (Some(dir), _) => dir
-  | (None, "Win32") => Sys.getenv("LOCALAPPDATA")
-  | (None, _) => ""
-  };
-};
-
-let makeAbsolutePath = path =>
-  if (path.[0] == '~') {
-    Str.replace_first(Str.regexp("~"), getHome(), path);
-  } else if (path.[0] != '/') {
-    join([Unix.getcwd(), path]);
-  } else {
-    path;
-  };
-
-let makeFolder = path => {
-  Unix.mkdir(path, 0o755);
-};
-
-let checkFolderExists = path => {
-  let absPath = makeAbsolutePath(path);
-
-  let folderStat =
-    try (Some(Unix.stat(absPath))) {
-    | Unix.Unix_error(_, _, _) => None
-    };
-
-  switch (folderStat) {
-  | None => makeFolder(absPath)
-  | _ => ()
-  };
-};
-
-let checkPathExists = path => {
-  let absPath = makeAbsolutePath(path);
-
-  let fileSep = Str.regexp(Filename.dir_sep);
-  let splitPath = Str.split(fileSep, absPath);
-
-  let firstPathSep = Str.search_forward(fileSep, absPath, 1);
-  let path = ref(String.sub(absPath, 0, firstPathSep));
-
-  for (i in 1 to List.length(splitPath) - 1) {
-    checkFolderExists(path^);
-    path := join([path^, List.nth(splitPath, i)]);
-  };
-};
-
 let leftPadString = (~inputString, ~len, ~padding) => {
   let paddedString = ref(inputString);
   while (String.length(paddedString^) < len) {
@@ -73,6 +11,29 @@ let leftPadString = (~inputString, ~len, ~padding) => {
   };
 
   paddedString^;
+};
+
+let padDate = str => leftPadString(~inputString=str, ~len=2, ~padding="0");
+
+let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
+  string_of_int(time.tm_year + 1900)
+  ++ "-"
+  ++ padDate(string_of_int(time.tm_mon + 1))
+  ++ "-"
+  ++ padDate(string_of_int(time.tm_mday));
+};
+
+let getTime = (~time=Unix.gmtime(Unix.time()), ()) => {
+  padDate(string_of_int(time.tm_hour))
+  ++ ":"
+  ++ padDate(string_of_int(time.tm_min))
+  ++ ":"
+  ++ padDate(string_of_int(time.tm_sec));
+};
+
+let getFormattedTime = (~time=Unix.time(), ()) => {
+  let time = Unix.gmtime(time);
+  getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
 };
 
 let code = str => "`" ++ str ++ "`";
@@ -94,19 +55,3 @@ let rec combineLists = listOfLists =>
   };
 
 let codeBlock = strList => combineLists([["```sh"], strList, ["```"]]);
-
-module CommandType = {
-  type t =
-    | Run
-    | GenerateConfig
-    | Search;
-
-  let checkArg = str => {
-    switch (str) {
-    | "run" => Some(Run)
-    | "genconfig" => Some(GenerateConfig)
-    | "search" => Some(Search)
-    | _ => None
-    };
-  };
-};

@@ -3,31 +3,10 @@
  *
  * Various utilities to logging the output of commands.
  */
-open Config;
+
+open Types.Config;
+open PathUtil;
 open Util;
-
-let padDate = str => leftPadString(~inputString=str, ~len=2, ~padding="0");
-
-let getDate = (~time=Unix.gmtime(Unix.time()), ()) => {
-  string_of_int(time.tm_year + 1900)
-  ++ "-"
-  ++ padDate(string_of_int(time.tm_mon + 1))
-  ++ "-"
-  ++ padDate(string_of_int(time.tm_mday));
-};
-
-let getTime = (~time=Unix.gmtime(Unix.time()), ()) => {
-  padDate(string_of_int(time.tm_hour))
-  ++ ":"
-  ++ padDate(string_of_int(time.tm_min))
-  ++ ":"
-  ++ padDate(string_of_int(time.tm_sec));
-};
-
-let getFormattedTime = (~time=Unix.time(), ()) => {
-  let time = Unix.gmtime(time);
-  getDate(~time, ()) ++ "T" ++ getTime(~time, ()) ++ "Z";
-};
 
 let getLogFilePath = (job, config) => {
   let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
@@ -38,21 +17,7 @@ let getLogFilePath = (job, config) => {
   join([outputFolder, getFormattedTime() ++ "_" ++ job ++ ".log"]);
 };
 
-let writeFile = (path, stringList) => {
-  let fileOut = open_out(path);
-
-  let rec writeStringListToFile = outputChannel =>
-    fun
-    | [] => ()
-    | [line, ...restOfList] => {
-        Printf.fprintf(outputChannel, "%s\n", line);
-        writeStringListToFile(outputChannel, restOfList);
-      };
-
-  writeStringListToFile(fileOut, stringList);
-};
-
-let formatLinesOfInterest = (command: Command.t) =>
+let formatLinesOfInterest = (command: Types.Command.t) =>
   if (command.linesOfInterest == []) {
     [];
   } else {
@@ -64,7 +29,7 @@ let formatLinesOfInterest = (command: Command.t) =>
     combineLists([["Logged Output:", ""], formattedLinesOfInterest, [""]]);
   };
 
-let formatSubCommand = (command: Command.t) => {
+let formatSubCommand = (command: Types.Command.t) => {
   combineLists([
     [
       "### " ++ code(command.command),
@@ -111,7 +76,7 @@ let formatSubCommand = (command: Command.t) => {
  *
  * Output for cmd2
  */
-let makeMetaData = (output: list(Command.t)) => {
+let makeMetaData = (output: list(Types.Command.t)) => {
   let mainCommand = List.nth(output, 0);
 
   let header = (n, str) => String.make(n, '#') ++ " " ++ str;
@@ -184,7 +149,7 @@ let parseCmdOutput = (config, logFilePath) => {
   linesOfInterest^;
 };
 
-let makeLogFile = (output: list(Command.t), config, logMsg) => {
+let makeLogFile = (output: list(Types.Command.t), config, logMsg) => {
   let metadataLogFile = getLogFilePath("meta", config);
   logMsg("Logging command metadata to " ++ metadataLogFile);
 
@@ -192,5 +157,5 @@ let makeLogFile = (output: list(Command.t), config, logMsg) => {
   let commandMetadata = makeMetaData(output);
 
   logMsg("Writing metadata log file...");
-  writeFile(metadataLogFile, commandMetadata);
+  PathUtil.writeFile(metadataLogFile, commandMetadata);
 };

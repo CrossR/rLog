@@ -3,7 +3,7 @@ open TestUtils;
 
 describe("Test main runner", ({test, _}) => {
   test("Runs set of commands correctly", ({expect}) => {
-    let args = RLogLib.Cli.default;
+    let args = RLogLib.Types.Cli.default;
     let logMsg = (str: string) => ();
 
     args.restOfCLI :=
@@ -15,7 +15,7 @@ describe("Test main runner", ({test, _}) => {
   });
 
   test("Runs set of long running commands correctly", ({expect}) => {
-    let args = RLogLib.Cli.default;
+    let args = RLogLib.Types.Cli.default;
     let logMsg = (str: string) => ();
 
     args.restOfCLI :=
@@ -31,7 +31,7 @@ describe("Test main runner", ({test, _}) => {
   });
 
   test("Doesn't slow down massively for large output", ({expect}) => {
-    let args = RLogLib.Cli.default;
+    let args = RLogLib.Types.Cli.default;
     let logMsg = (str: string) => ();
 
     args.restOfCLI := ["bash", Unix.getcwd() ++ "/test/assets/spamTerm.sh"];

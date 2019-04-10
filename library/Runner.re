@@ -3,7 +3,7 @@
  *
  * Entry point to combine the main and sub command logging.
  */
-open Cli;
+open Types.Cli;
 
 /*
  * Always pass over the list, since we don't know if the others are needed until
@@ -23,6 +23,7 @@ let getConfigPaths = args => {
   };
 };
 
+/* Actually run a command and all its subcommands for logging. */
 let start = (~silent=false, args, logMsg) => {
   let configPaths = getConfigPaths(args);
 
@@ -39,8 +40,7 @@ let start = (~silent=false, args, logMsg) => {
   let silent = silent || args.silent^;
   let logFile = Logging.getLogFilePath("cmd", config);
 
-  let commandOutputs =
-    Command.runMultipleCommand(~silent, ~logFile, ~config, cmds);
+  let commandOutputs = Command.runMultipleCommand(~silent, ~logFile, cmds);
 
   let enableParsing = args.enableOutputParsing^;
 

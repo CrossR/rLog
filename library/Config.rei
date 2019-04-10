@@ -4,14 +4,5 @@
  * Configuration file loading and parsing.
  */
 
-type t = {
-  mutable outputPath: string,
-  mutable commandsToRun: list(string),
-  loadLocalCommands: bool,
-  mutable valuesToLog: list(string),
-};
-
-let default: t;
 let makeDefaultConfig: string => unit;
-let getConfig: (list(string), string => unit) => t;
-let getConfigLocation: unit => string;
+let getConfig: (list(string), string => unit) => Types.Config.t;

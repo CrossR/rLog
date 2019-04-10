@@ -5,4 +5,5 @@
  */
 
 let start:
-  (~silent: bool=?, Cli.t, string => unit) => option(Unix.process_status);
+  (~silent: bool=?, Types.Cli.t, string => unit) =>
+  option(Unix.process_status);

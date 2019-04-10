@@ -4,25 +4,7 @@
  * Various utilities to help with the CLI of rLog.
  */
 
-type t = {
-  showHelp: ref(bool),
-  verbose: ref(bool),
-  silent: ref(bool),
-  configPath: ref(string),
-  restOfCLI: ref(list(string)),
-  mutable command: Util.CommandType.t,
-  enableOutputParsing: ref(bool),
-};
-
-let default = {
-  showHelp: ref(false),
-  verbose: ref(false),
-  configPath: ref(Config.getConfigLocation()),
-  silent: ref(false),
-  restOfCLI: ref([]),
-  command: Util.CommandType.Run,
-  enableOutputParsing: ref(false),
-};
+open Types.Cli;
 
 let missingCommand = "rLog must be called with -- followed by the command to be ran!";
 
@@ -80,8 +62,9 @@ let argList = cliObj => {
   ]);
 };
 
+/* Anonymous args are all the ones after the -- */
 let dealWithAnonArgs = (arg, cliObj) => {
-  let findResult = Util.CommandType.checkArg(arg);
+  let findResult = Types.CommandType.checkArg(arg);
 
   switch (findResult) {
   | Some(command) => cliObj.command = command
@@ -89,9 +72,9 @@ let dealWithAnonArgs = (arg, cliObj) => {
   };
 };
 
-let isRun = cliObj => cliObj.command == Util.CommandType.Run;
-let isConfigGen = cliObj => cliObj.command == Util.CommandType.GenerateConfig;
-let isSearch = cliObj => cliObj.command == Util.CommandType.Search;
+let isRun = cliObj => cliObj.command == Types.CommandType.Run;
+let isConfigGen = cliObj => cliObj.command == Types.CommandType.GenerateConfig;
+let isSearch = cliObj => cliObj.command == Types.CommandType.Search;
 
 let getArgs = () => {
   let cliObj = default;
