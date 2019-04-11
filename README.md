@@ -56,6 +56,19 @@ Where:
     must be explicitly enabled by passing `-p` or `--parse` to the CLI, since
     it can slow down commands considerably.
 
+### Command variables
+
+Both `logCommands` and `linkCommands` can contain variables which will
+dynamically be replaced.
+
+| Variable | Replacement | Command |
+|----------|-------------|---------|
+| `${CWD}`   | The directory `rLog` was opened in. | Both |
+| `${GITROOT}` | The git root of the `${CWD}` if applicable. If not, this command will not run. | Both |
+| `${OUTPUTFILE}` | The passed output file(s). If multiple files are given, the command is invoked multiple times. | Link |
+| `${OUTPUTFILES}` | The full list of passed files. | Link |
+| `${COMMAND}` | The full passed command. | Run |
+
 ## Usage
 
 Usage should just be `rLog -- commandToRun`, to run `commandToRun` and have
@@ -82,7 +95,7 @@ Stuff to do:
  - [X] Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `rLog link` and have a link to the
     log file in the data location too).
- - [ ] Add a variable syntax to the commands (so I can define dynamic
+ - [X] Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
  - [ ] Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).

@@ -2,6 +2,7 @@
 include TestLogger;
 include TestCommand;
 include TestRunner;
+include TestCommandVariables;
 
 let jUnitOutputFile = "./" ++ Sys.os_type ++ "_junit.xml";
 

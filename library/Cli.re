@@ -8,7 +8,7 @@ open Types.Cli;
 
 let missingCommand = "rLog must be called with -- followed by the command to be ran!";
 
-let helpText = {|rLog 0.1.1
+let helpText = {|rLog 0.1.2
 Ryan Cross <r.cross@lancaster.ac.uk>
 
 rLog is a CLI tool for logging the output of commands. Any command passed to
@@ -80,6 +80,7 @@ let dealWithAnonArgs = (arg, cliObj) => {
 let isRun = cliObj => cliObj.command == Types.CommandType.Run;
 let isConfigGen = cliObj => cliObj.command == Types.CommandType.GenerateConfig;
 let isSearch = cliObj => cliObj.command == Types.CommandType.Search;
+let isLink = cliObj => cliObj.command == Types.CommandType.Link;
 
 let getArgs = () => {
   let cliObj = default;

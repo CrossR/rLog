@@ -11,7 +11,7 @@ describe("Test main runner", ({test, _}) => {
     args.configPath := Unix.getcwd() ++ "/test/assets/config.json";
 
     let result = RLogLib.Runner.start(~silent=true, args, logMsg);
-    expect.equal(result, Some(Unix.WEXITED(0)));
+    expect.equal(Some(Unix.WEXITED(0)), result);
   });
 
   test("Runs set of long running commands correctly", ({expect}) => {
@@ -26,7 +26,7 @@ describe("Test main runner", ({test, _}) => {
     let result = RLogLib.Runner.start(~silent=true, args, logMsg);
     let endTime = Unix.time();
 
-    expect.equal(result, Some(Unix.WEXITED(0)));
+    expect.equal(Some(Unix.WEXITED(0)), result);
     expect.equal(endTime -. startTime >= 5.0, true);
   });
 

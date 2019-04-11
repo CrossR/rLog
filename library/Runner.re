@@ -14,7 +14,11 @@ open Types.Cli;
  */
 let getConfigPaths = args => {
   let rootGitDir =
-    Command.runCmd(~runSilently=true, "git rev-parse --show-toplevel");
+    Command.runCmd(
+      ~storeOutput=true,
+      ~runSilently=true,
+      "git rev-parse --show-toplevel",
+    );
 
   if (rootGitDir.outputLines != [] && rootGitDir.status == Some(WEXITED(0))) {
     [args.configPath^, List.nth(rootGitDir.outputLines, 0), "."];
@@ -28,6 +32,10 @@ let start = (~silent=false, args, logMsg) => {
   let configPaths = getConfigPaths(args);
 
   let config = Config.getConfig(configPaths, logMsg);
+
+  let replacedConfigCommands =
+    CommandVariables.formatCommands(config.logCommands, args);
+  config.logCommands = replacedConfigCommands;
 
   let cmd = String.concat(" ", args.restOfCLI^);
   logMsg("Command to be run is: " ++ cmd);
@@ -60,6 +68,10 @@ let start = (~silent=false, args, logMsg) => {
 let link = (args, logMsg) => {
   let configPaths = getConfigPaths(args);
   let config = Config.getConfig(configPaths, logMsg);
+
+  let replacedConfigCommands =
+    CommandVariables.formatCommands(config.linkCommands, args);
+  config.linkCommands = replacedConfigCommands;
 
   let latestLogFile = Logging.getLastLogFilePath(config.outputPath, logMsg);
   let logFilePath =
