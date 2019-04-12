@@ -10,13 +10,13 @@ open Util;
 open Types.Config;
 open Types.Command;
 
-let getLogFilePath = (job, config) => {
+let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
   let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
 
   checkFolderExists(config.outputPath);
   checkFolderExists(outputFolder);
 
-  join([outputFolder, getFormattedTime() ++ "_" ++ job ++ ".log"]);
+  join([outputFolder, getFormattedTime(~time, ()) ++ "_" ++ job ++ ".log"]);
 };
 
 let formatLinesOfInterest = (command: Types.Command.t) =>
@@ -170,8 +170,8 @@ let parseCmdOutput = (config, logFilePath) => {
   linesOfInterest^;
 };
 
-let makeLogFile = (output: list(Types.Command.t), config, logMsg) => {
-  let metadataLogFile = getLogFilePath("meta", config);
+let makeLogFile = (output: list(Types.Command.t), config, time, logMsg) => {
+  let metadataLogFile = getLogFilePath(~time, "meta", config);
   logMsg("Logging command metadata to " ++ metadataLogFile);
 
   logMsg("Builiding metadata markdown file...");
@@ -242,7 +242,7 @@ let pathWithoutType = path =>
 let linkOutputToLogFile = (metadataPath, config, outputs, logMsg) => {
   let currentHeader = getCurrentHeader(metadataPath, config, logMsg);
   let linkLogFilePath = pathWithoutType(metadataPath) ++ "output.log";
-  let commandOutputPath = pathWithoutType(metadataPath) ++ "output.log";
+  let commandOutputPath = pathWithoutType(metadataPath) ++ "cmd.log";
   logMsg("Output link file will be " ++ linkLogFilePath);
 
   logMsg("Running the link commands...");

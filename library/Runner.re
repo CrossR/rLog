@@ -46,7 +46,10 @@ let start = (~silent=false, args, logMsg) => {
 
   logMsg("Staring command runner...");
   let silent = silent || args.silent^;
-  let logFile = Logging.getLogFilePath("cmd", config);
+
+  /* Store the time, so the Metadata one matches. */
+  let time = Unix.gettimeofday();
+  let logFile = Logging.getLogFilePath(~time, "cmd", config);
 
   let commandOutputs = Command.runMultipleCommand(~silent, ~logFile, cmds);
 
@@ -60,7 +63,7 @@ let start = (~silent=false, args, logMsg) => {
     }
   );
 
-  Logging.makeLogFile(commandOutputs, config, logMsg);
+  Logging.makeLogFile(commandOutputs, config, time, logMsg);
 
   List.nth(commandOutputs, 0).status;
 };
