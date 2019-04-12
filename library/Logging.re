@@ -247,7 +247,11 @@ let linkOutputToLogFile = (metadataPath, config, outputs, logMsg) => {
 
   logMsg("Running the link commands...");
   let commandOutput =
-    Command.runMultipleCommand(~silent=true, config.linkCommands);
+    Command.runMultipleCommand(
+      ~storeFirst=true,
+      ~silent=true,
+      config.linkCommands,
+    );
   let profileOutput =
     List.append(
       formatOutputFiles(outputs),

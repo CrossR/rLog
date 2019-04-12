@@ -95,7 +95,12 @@ let runCmd = (~storeOutput=false, ~runSilently=false, ~logFile="", command) => {
  * The main command isn't stored, but the rest are.
  */
 let runMultipleCommand =
-    (~silent=false, ~logFile="", listOfCommands: list(string)) => {
+    (
+      ~storeFirst=false,
+      ~silent=false,
+      ~logFile="",
+      listOfCommands: list(string),
+    ) => {
   let parMapList = Parmap.L(listOfCommands);
 
   /* Run all but the main command silently, unless explicity silent. */
@@ -105,7 +110,7 @@ let runMultipleCommand =
   let getLogFilePath = i => i == 0 ? logFile : "";
 
   /* Store output for all commands except the first, to help with performance. */
-  let storeOutput = i => i == 0 ? false : true;
+  let storeOutput = i => i == 0 ? storeFirst : true;
 
   Parmap.parmapi(
     (i, c) =>
