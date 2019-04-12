@@ -23,11 +23,26 @@ let parseLine = (storeOutput, runSilently, line, commandOutput) => {
   };
 };
 
+let getTeeCommand = (command, logFile) => {
+  let pipeName = "/tmp/rLog" ++ Util.genRandomStr(10);
+  (
+    Printf.sprintf(
+      "mkfifo %s; tee %s < %s & %s > %s",
+      pipeName,
+      logFile,
+      pipeName,
+      command,
+      pipeName,
+    ),
+    pipeName,
+  );
+};
+
 /*
  * For the main command, directly tee its results, else stream them.
  */
 let wrapCommand = (command, logFile) => {
-  logFile == "" ? command ++ " 2>&1" : command ++ " 2>&1 | tee -a " ++ logFile;
+  logFile == "" ? (command ++ " 2>&1", "") : getTeeCommand(command, logFile);
 };
 
 /*
@@ -36,28 +51,27 @@ let wrapCommand = (command, logFile) => {
 let runCmd = (~storeOutput=false, ~runSilently=false, ~logFile="", command) => {
   let startTime = Unix.gettimeofday();
 
-  let inChannel = wrapCommand(command, logFile) |> Unix.open_process_in;
   let commandOutput = default(command);
 
-  Stream.from(_ =>
-    switch (input_line(inChannel)) {
-    | line => Some(line)
-    | exception End_of_file => None
-    }
-  )
-  |> (
-    stream =>
-      try (
-        Stream.iter(
-          line => parseLine(storeOutput, runSilently, line, commandOutput),
-          stream,
-        )
-      ) {
-      | _error => close_in(inChannel)
-      }
-  );
+  let processOutput = command => {
+    let inChannel = Unix.open_process_in(command);
 
-  commandOutput.status = Some(Unix.close_process_in(inChannel));
+    let rec process_otl_aux = () => {
+      let line = input_line(inChannel);
+      parseLine(storeOutput, runSilently, line, commandOutput);
+      process_otl_aux();
+    };
+
+    try (process_otl_aux()) {
+    | End_of_file =>
+      let stat = Unix.close_process_in(inChannel);
+      (commandOutput, stat);
+    };
+  };
+
+  let (wrappedCommand, pipeName) = wrapCommand(command, logFile);
+  let result = processOutput(wrappedCommand);
+  commandOutput.status = Some(snd(result));
 
   let endTime = Unix.gettimeofday();
   commandOutput.runningTime = endTime -. startTime;
@@ -65,6 +79,11 @@ let runCmd = (~storeOutput=false, ~runSilently=false, ~logFile="", command) => {
   /* Fix the backwards output array. */
   if (commandOutput.outputLines != []) {
     commandOutput.outputLines = List.rev(commandOutput.outputLines);
+  };
+
+  /* Tidy the pipe up if needs be. */
+  if (pipeName != "") {
+    Sys.remove(pipeName);
   };
 
   commandOutput;

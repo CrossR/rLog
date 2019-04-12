@@ -55,3 +55,15 @@ let rec combineLists = listOfLists =>
   };
 
 let codeBlock = strList => combineLists([["```sh"], strList, ["```"]]);
+
+let genRandomStr = length => {
+  Random.self_init();
+  let gen = () =>
+    switch (Random.int(26 + 26 + 10)) {
+    | n when n < 26 => int_of_char('a') + n
+    | n when n < 26 + 26 => int_of_char('A') + n - 26
+    | n => int_of_char('0') + n - 26 - 26
+    };
+  let gen = _ => String.make(1, char_of_int(gen()));
+  String.concat("", Array.to_list(Array.init(length, gen)));
+};
