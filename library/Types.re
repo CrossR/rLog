@@ -45,6 +45,7 @@ module Cli = {
     showHelp: ref(bool),
     verbose: ref(bool),
     silent: ref(bool),
+    force: ref(bool),
     configPath: ref(string),
     restOfCLI: ref(list(string)),
     mutable command: CommandType.t,
@@ -54,6 +55,7 @@ module Cli = {
   let default = {
     showHelp: ref(false),
     verbose: ref(false),
+    force: ref(false),
     configPath: ref(PathUtil.getConfigLocation()),
     silent: ref(false),
     restOfCLI: ref([]),

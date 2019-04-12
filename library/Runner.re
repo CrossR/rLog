@@ -85,11 +85,19 @@ let link = (args, logMsg) => {
 
   let isMetadataPath =
     Str.string_match(Str.regexp({|.*meta\.log|}), logFilePath, 0);
+  let isOutputPath =
+    Str.string_match(Str.regexp({|.*output\.log|}), logFilePath, 0);
 
   if (logFilePath != "" && isMetadataPath) {
     Logging.linkOutputToLogFile(logFilePath, config, args.restOfCLI^, logMsg);
-  } else {
+  } else if (isOutputPath && args.force^) {
+    let logFilePath =
+      Str.replace_first(Str.regexp({|output|}), "meta", logFilePath);
+    Logging.linkOutputToLogFile(logFilePath, config, args.restOfCLI^, logMsg);
+  } else if (isOutputPath && args.force^ == false) {
     Console.error("An output file for the previous run exists...");
     Console.error("Use the -f flag if you are sure you want to do this.");
+  } else {
+    Console.error("Could not find a metadata file to link to...");
   };
 };

@@ -109,6 +109,12 @@ let getMostRecentFromFolder = (path, shouldBeDirectory) => {
   };
 };
 
-let makeLink = (path, fileName) => {
-  Unix.symlink(path, fileName);
-};
+let makeLink = (path, fileName) =>
+  try (Unix.symlink(path, fileName)) {
+  | Unix.Unix_error(Unix.EEXIST, command, _) =>
+    Console.error("Failed to " ++ command ++ " due to file already existing!")
+  | Unix.Unix_error(err, command, _) =>
+    Console.error(
+      "Failed to " ++ command ++ " with error " ++ Unix.error_message(err),
+    )
+  };

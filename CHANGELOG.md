@@ -1,3 +1,15 @@
+## v0.1.3
+
+#### Features
+
+   - Add force flag for CLI, to force the making of link files. (#23)
+
+#### Fixes
+
+   - Fix error code capture. (#20)
+   - Fix link file issues. (#21)
+   - Fix storing output of first link command. (#22)
+
 ## v0.1.2
 
 #### Features
