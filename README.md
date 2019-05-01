@@ -4,7 +4,7 @@
 <a href="https://dev.azure.com/CrossR-1/rLog/_build/latest?definitionId=5&branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
 </p>
 
-rLog is a very WIP tool for logging the output of commands for scientific
+rLog is a WIP tool for logging the output of commands for scientific
 workflows.
 
 I find myself very often running some long-running command to produce
@@ -69,6 +69,41 @@ dynamically be replaced.
 | `${OUTPUTFILES}` | The full list of passed files. | Link |
 | `${COMMAND}` | The full passed command. | Run |
 
+### Example Config
+
+```json
+{
+    "outputPath": "~/rLogOut",
+    "logCommands": [
+       "git -C ~/git/simulator status",
+       "git -C ~/git/simulator diff",
+       "git -C ${GITROOT} status",
+       "git -C ${GITROOT} diff",
+       "env",
+       "bash ~/scripts/parseConfigFiles.sh ${COMMAND}"
+    ],
+    "linkCommands": [
+       "cksum ${OUTPUTFILE}",
+       "bash ~/scripts/parseOutputFile.sh ${OUTPUTFILE}",
+       "echo ${OUTPUTFILES} >> ~/logs/totalOutputFiles.txt"
+    ],
+    "loadLocalCommands": false,
+    "valuesToLog": ["@LOG@: "]
+}
+```
+
+In this example, when I use `rLog` I'll get the current status of my
+simulator, as well as the state of the `git` repository, both of which can
+play a big part in why an output looks the way it does.
+
+The environment is fully logged out, to pick up the library versions and such
+that are setup with environment variables, and a script is ran on the full
+command that will parse the config file out and store the status of the
+config file that was used.
+
+After running, the files are passed through a quick checksum, parsed further
+and also stored in a secondary log file.
+
 ## Usage
 
 Usage should just be `rLog -- commandToRun`, to run `commandToRun` and have
@@ -82,7 +117,11 @@ command output and metadata output.
 
 `rLog genconfig` will generate a default config file in
 `~/.config/rLog` (or in a custom location if `--config-path` is
-given.)
+given.) This can be useful for making multiple configs, so that aliases can
+be setup for certain workflows. That is, using something like
+`alias pLog=rLog --config-path ~/configs/pConfig.json` means `pLog` can now
+be used to automatically use a project specific config, if a project spans
+multiple repositories, so using a project local config is not an option.
 
 ## ToDo
 
@@ -91,7 +130,6 @@ Stuff to do:
  - [X] Make a release, so I have a binary.
  - [X] Return the ran commands status code.
  - [X] Implement the project specific config.
- - [ ] Add a search command (to dump out all commands, for use with FZF etc).
  - [X] Add command to get a link to the most recent config (so then I can do
     `do_simulation.sh` and then `rLog link` and have a link to the
     log file in the data location too).

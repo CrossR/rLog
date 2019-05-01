@@ -11,12 +11,16 @@ open Types.Config;
 open Types.Command;
 
 let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
-  let outputFolder = makeAbsolutePath(join([config.outputPath, getDate()]));
+  let outputFolder =
+    makeAbsolutePath(join([config.outputPath, getDateStr()]));
 
   checkFolderExists(config.outputPath);
   checkFolderExists(outputFolder);
 
-  join([outputFolder, getFormattedTime(~time, ()) ++ "_" ++ job ++ ".log"]);
+  join([
+    outputFolder,
+    getFormattedTimeStr(~time, ()) ++ "_" ++ job ++ ".log",
+  ]);
 };
 
 let formatLinesOfInterest = (command: Types.Command.t) =>
