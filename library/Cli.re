@@ -8,7 +8,7 @@ open Types.Cli;
 
 let missingCommand = "rLog must be called with -- followed by the command to be ran!";
 
-let helpText = {|rLog 0.1.3
+let helpText = {|rLog 1.0.0
 Ryan Cross <r.cross@lancaster.ac.uk>
 
 rLog is a CLI tool for logging the output of commands. Any command passed to
@@ -41,6 +41,7 @@ let argList = cliObj => {
     ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
+    ("-R", Arg.Set(cliObj.recurse), " Recursively link files from folders."),
     (
       "-f",
       Arg.Set(cliObj.force),
@@ -67,7 +68,7 @@ let argList = cliObj => {
       Arg.Rest(
         arg => cliObj.restOfCLI := List.append(cliObj.restOfCLI^, [arg]),
       ),
-      " Stop parsing CLI flags and treat the rest of the command as input for the command to run.",
+      " Stop parsing CLI flags and treat the rest of the command as input for the given function (run or link).",
     ),
   ]);
 };

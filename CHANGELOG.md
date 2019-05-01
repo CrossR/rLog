@@ -1,14 +1,16 @@
-## v0.1.3
+## v1.0.0
 
 #### Features
 
    - Add force flag for CLI, to force the making of link files. (#23)
+   - Add recursive flag to `link` (`-R`), so that folders can be linked to recursively. (#27)
 
 #### Fixes
 
    - Fix error code capture. (#20)
    - Fix link file issues. (#21)
    - Fix storing output of first link command. (#22)
+   - Use the local system time, rather than UTC (#25)
 
 ## v0.1.2
 

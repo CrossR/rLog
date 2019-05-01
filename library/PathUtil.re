@@ -118,3 +118,50 @@ let makeLink = (path, fileName) =>
       "Failed to " ++ command ++ " with error " ++ Unix.error_message(err),
     )
   };
+
+let getFilesFromPathRecursively = dir => {
+  let rec walk = acc => {
+    fun
+    | [] => acc
+    | [dir, ...tail] => {
+        let contents = Array.to_list(Sys.readdir(dir));
+        let contents = List.rev_map(Filename.concat(dir), contents);
+        let (dirs, files) =
+          List.fold_left(
+            ((dirs, files), f) =>
+              switch (Unix.(stat(f).st_kind)) {
+              | Unix.S_REG => (dirs, [f, ...files]) /* Regular file */
+              | Unix.S_DIR => ([f, ...dirs], files) /* Directory */
+              | _ => (dirs, files)
+              },
+            ([], []),
+            contents,
+          );
+        walk(files @ acc, dirs @ tail);
+      };
+  };
+  walk([], [dir]);
+};
+
+let getAllFiles = paths => {
+  let totalFiles = ref([]);
+  for (i in 0 to List.length(paths) - 1) {
+    let currentLinkObject = makeAbsolutePath(List.nth(paths, i));
+
+    let isDirectory =
+      switch (Unix.(stat(currentLinkObject).st_kind)) {
+      | Unix.S_REG => false
+      | Unix.S_DIR => true
+      | _ => false
+      };
+
+    if (isDirectory) {
+      let files = getFilesFromPathRecursively(currentLinkObject);
+      totalFiles := List.append(totalFiles^, files);
+    } else {
+      totalFiles := List.append(totalFiles^, [currentLinkObject]);
+    };
+  };
+
+  totalFiles^;
+};

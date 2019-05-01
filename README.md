@@ -4,7 +4,7 @@
 <a href="https://dev.azure.com/CrossR-1/rLog/_build/latest?definitionId=5&branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
 </p>
 
-rLog is a WIP tool for logging the output of commands for scientific
+rLog is a tool for logging the output of commands for scientific
 workflows.
 
 I find myself very often running some long-running command to produce
@@ -110,6 +110,8 @@ Usage should just be `rLog -- commandToRun`, to run `commandToRun` and have
 it logged to the location outlined in the config file, with the `logCommands`
 ran to produce metadata for that command.
 
+Running `rLog --help` will show the command line flags and their usage.
+
 `rLog link -- output1.txt` can be used to link to the most recent run. Link
 in this context will create a symlink to a new `output` file, which will run
 any of the `linkCommands`, as well as giving an easy way of accessing the
@@ -135,6 +137,7 @@ Stuff to do:
     log file in the data location too).
  - [X] Add a variable syntax to the commands (so I can define dynamic
     commands, that depend on the env/command ran, not just static ones).
+ - [ ] Add a search/list command for listing the ran commands.
  - [ ] Check if I can get this running on Windows (not a priority since none
     of my workflow that benefits from this is on Windows...).
 

@@ -100,7 +100,7 @@ describe("Test command variable replacement", ({test, _}) => {
       "echo 'Bill'",
       "print 'test1.sh test2.sh'",
     ];
-    let result = formatCommands(command, args);
+    let result = formatCommands(command, args, str => ());
 
     expect.int(List.length(result)).toBe(5);
     expect.list(result).toEqual(expectedResult);
@@ -115,7 +115,7 @@ describe("Test command variable replacement", ({test, _}) => {
       "echo 'bash test1.sh bash test2.sh'",
       "echo 'Bill'",
     ];
-    let result = formatCommands(command, args);
+    let result = formatCommands(command, args, str => ());
 
     expect.int(List.length(result)).toBe(3);
     expect.list(result).toEqual(expectedResult);

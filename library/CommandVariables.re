@@ -73,15 +73,19 @@ let replaceOutputFile = (commands, outputFiles) => {
   |> List.flatten;
 };
 
-let formatCommands = (commands, args) => {
+let formatCommands = (commands, args, logMsg) => {
   let finalCommands = ref([]);
 
+  logMsg("Replacing CWD and GITROOT...");
   finalCommands := replaceCWD(commands);
   finalCommands := replaceGitRoot(finalCommands^);
 
   if (Cli.isRun(args)) {
+    logMsg("Replacing COMMAND...");
     finalCommands := replaceCommand(finalCommands^, args.restOfCLI^);
   } else if (Cli.isLink(args)) {
+    logMsg("Replacing OUTPUTFILE and OUTPUTFILES...");
+    logMsg("Replacement is recursive: " ++ string_of_bool(args.recurse^));
     finalCommands := replaceOutputFile(finalCommands^, args.restOfCLI^);
     finalCommands := replaceOutputFiles(finalCommands^, args.restOfCLI^);
   };

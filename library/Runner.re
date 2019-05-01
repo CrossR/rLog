@@ -34,7 +34,7 @@ let start = (~silent=false, args, logMsg) => {
   let config = Config.getConfig(configPaths, logMsg);
 
   let replacedConfigCommands =
-    CommandVariables.formatCommands(config.logCommands, args);
+    CommandVariables.formatCommands(config.logCommands, args, logMsg);
   config.logCommands = replacedConfigCommands;
 
   let cmd = String.concat(" ", args.restOfCLI^);
@@ -72,8 +72,11 @@ let link = (args, logMsg) => {
   let configPaths = getConfigPaths(args);
   let config = Config.getConfig(configPaths, logMsg);
 
+  args.restOfCLI :=
+    args.recurse^ ? PathUtil.getAllFiles(args.restOfCLI^) : args.restOfCLI^;
+
   let replacedConfigCommands =
-    CommandVariables.formatCommands(config.linkCommands, args);
+    CommandVariables.formatCommands(config.linkCommands, args, logMsg);
   config.linkCommands = replacedConfigCommands;
 
   let latestLogFile = Logging.getLastLogFilePath(config.outputPath, logMsg);
