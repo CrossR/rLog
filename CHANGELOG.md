@@ -1,5 +1,9 @@
 ## v1.0.1
 
+#### Features
+
+   - Format execution time into `HH:MM:SS.xxxx` format. (#30)
+
 ## v1.0.0
 
 #### Features

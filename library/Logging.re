@@ -19,7 +19,7 @@ let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
 
   join([
     outputFolder,
-    getFormattedTimeStr(~time, ()) ++ "_" ++ job ++ ".log",
+    getFormattedDateTimeStr(~time, ()) ++ "_" ++ job ++ ".log",
   ]);
 };
 
@@ -54,7 +54,7 @@ let formatSubCommand = (command: Types.Command.t) => {
       "### " ++ code(command.command),
       "",
       processStatus(command.status),
-      "Time Taken: " ++ string_of_float(command.runningTime),
+      "Time Taken: " ++ Util.formatExecutionTime(command.runningTime),
       "",
     ],
     codeBlock(command.outputLines),
@@ -118,7 +118,7 @@ let makeMetaData = (output: list(Types.Command.t)) => {
     header(2, "Result"),
     "",
     processStatus(mainCommand.status),
-    "Time Taken: " ++ string_of_float(mainCommand.runningTime),
+    "Time Taken: " ++ Util.formatExecutionTime(mainCommand.runningTime),
     "",
     ...formatLinesOfInterest(mainCommand),
   ];

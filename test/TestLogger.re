@@ -20,7 +20,7 @@ describe("Test logging utilities", ({test, _}) => {
 
   test("Returns correctly formatted datetime", ({expect}) => {
     let time = 1548922088.0;
-    let result = RLogLib.Util.getFormattedTimeStr(~time, ());
+    let result = RLogLib.Util.getFormattedDateTimeStr(~time, ());
     let expectedResult = "2019-01-31T08:08:08Z";
 
     expect.equal(result, expectedResult);

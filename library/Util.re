@@ -33,9 +33,36 @@ let getTimeStr = (~time=getLocalDateTime(Unix.gettimeofday()), ()) => {
   ++ padDate(string_of_int(time.tm_sec));
 };
 
-let getFormattedTimeStr = (~time=Unix.gettimeofday(), ()) => {
+let getFormattedDateTimeStr = (~time=Unix.gettimeofday(), ()) => {
   let time = getLocalDateTime(time);
   getDateStr(~time, ()) ++ "T" ++ getTimeStr(~time, ()) ++ "Z";
+};
+
+let floatStr = (~start=0, inputStr) => {
+  let str = string_of_float(inputStr);
+  String.sub(str, start, String.length(str) - 1 - start);
+};
+
+let formatExecutionTime = executionTime => {
+  let secondsInHour = 3600.0;
+  let secondsInMin = 60.0;
+
+  let hours = floor(executionTime /. secondsInHour);
+  let remainingTime = executionTime -. hours *. secondsInHour;
+
+  let minutes = floor(remainingTime /. secondsInMin);
+  let remainingTime = remainingTime -. minutes *. secondsInMin;
+
+  let seconds = floor(remainingTime);
+  let remainingTime = remainingTime -. seconds;
+
+  leftPadString(floatStr(hours), 2, "0")
+  ++ ":"
+  ++ leftPadString(floatStr(minutes), 2, "0")
+  ++ ":"
+  ++ leftPadString(floatStr(seconds), 2, "0")
+  ++ "."
+  ++ floatStr(~start=2, remainingTime);
 };
 
 let code = str => "`" ++ str ++ "`";
