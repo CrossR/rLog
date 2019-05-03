@@ -178,7 +178,7 @@ let makeLogFile = (output: list(Types.Command.t), config, time, logMsg) => {
   let metadataLogFile = getLogFilePath(~time, "meta", config);
   logMsg("Logging command metadata to " ++ metadataLogFile);
 
-  logMsg("Builiding metadata markdown file...");
+  logMsg("Building metadata markdown file...");
   let commandMetadata = makeMetaData(output);
 
   logMsg("Writing metadata log file...");
@@ -207,7 +207,7 @@ let getLastLogFilePath = (logOutputPath, logMsg) => {
   };
 };
 
-/* Ie every line up to lines of interest. */
+/* I.e. every line up to lines of interest. */
 let logFileHeaderLen = 7;
 
 let getCurrentHeader = (path, config, logMsg) => {

@@ -45,7 +45,7 @@ let argList = cliObj => {
     (
       "-f",
       Arg.Set(cliObj.force),
-      " Enable forcing, which will skip warnings of dupliacted link files.",
+      " Enable forcing, which will skip warnings of duplicated link files.",
     ),
     ("--parse", Arg.Set(cliObj.enableOutputParsing), " "),
     (

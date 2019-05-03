@@ -31,7 +31,7 @@ let getConfigLocation = () =>
   | _ => join([getHome(), ".config", "rLog", "config.json"])
   };
 
-/* Make a path absoulute, by expanding ~ or adding the missing path. */
+/* Make a path absolute, by expanding ~ or adding the missing path. */
 let makeAbsolutePath = path =>
   if (path.[0] == '~') {
     Str.replace_first(Str.regexp("~"), getHome(), path);

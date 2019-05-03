@@ -103,7 +103,7 @@ let runMultipleCommand =
     ) => {
   let parMapList = Parmap.L(listOfCommands);
 
-  /* Run all but the main command silently, unless explicity silent. */
+  /* Run all but the main command silently, unless explicitly silent. */
   let runSilently = i => silent ? true : i != 0;
 
   /* Only give a log file for the first command. */

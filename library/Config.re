@@ -42,7 +42,7 @@ let loadConfig = configPath => {
   switch (Yojson.Safe.from_file(configPath) |> of_yojson) {
   | Ok(config) => config
   | Error(loc) =>
-    Console.log("Error Loc " ++ loc);
+    Console.log("Line of code with error: " ++ loc);
     Types.Config.default;
   };
 };
@@ -78,7 +78,7 @@ let combineProjectConfig = (main, project) => {
 };
 
 let getConfig = (configPaths, logMsg) => {
-  /* Get the main defualt config */
+  /* Get the main default config */
   logMsg("Loading config from:");
   let configPath = List.nth(configPaths, 0);
   PathUtil.checkPathExists(configPath);
