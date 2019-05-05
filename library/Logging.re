@@ -11,15 +11,19 @@ open Types.Config;
 open Types.Command;
 
 let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
+  let convertedTime = getLocalDateTime(time);
+
   let outputFolder =
-    makeAbsolutePath(join([config.outputPath, getDateStr()]));
+    makeAbsolutePath(
+      join([config.outputPath, getDateStr(~time=convertedTime, ())]),
+    );
 
   checkFolderExists(config.outputPath);
   checkFolderExists(outputFolder);
 
   join([
     outputFolder,
-    getFormattedDateTimeStr(~time, ()) ++ "_" ++ job ++ ".log",
+    getTimeStr(~time=convertedTime, ()) ++ "_" ++ job ++ ".log",
   ]);
 };
 

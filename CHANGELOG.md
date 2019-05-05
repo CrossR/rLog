@@ -4,6 +4,10 @@
 
    - Format execution time into `HH:MM:SS.xxxx` format. (#30)
 
+#### Fixes
+
+   - Fix issue around midnight where log files would be split over 2 days. (#32)
+
 ## v1.0.0
 
 #### Features
