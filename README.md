@@ -1,7 +1,7 @@
 # rLog
 
 <p align="center">
-<a href="https://dev.azure.com/CrossR-1/rLog/_build/latest?definitionId=5&branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
+<a href="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"><img alt="Build Status" src="https://dev.azure.com/CrossR-1/rLog/_apis/build/status/CrossR.rLog?branchName=master"></a>
 </p>
 
 rLog is a tool for logging the output of commands for scientific
