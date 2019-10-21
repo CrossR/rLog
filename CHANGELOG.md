@@ -1,3 +1,9 @@
+## v1.0.2
+
+#### Features
+
+   - Add `-l` flag to link to older log files. (#35)
+
 ## v1.0.1
 
 #### Features
