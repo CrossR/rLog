@@ -109,6 +109,9 @@ let readLineFromFile = path => {
       "";
     };
 
+  /* Close input stream. */
+  close_in(file_input);
+
   line;
 };
 

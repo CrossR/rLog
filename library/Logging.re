@@ -10,6 +10,13 @@ open Util;
 open Types.Config;
 open Types.Command;
 
+/* Length of metadata header and code tag. */
+let cmdHeaderLen = 3;
+/* Length of closing header code tag. */
+let codeTagLen = 1;
+/* I.e. every line up to lines of interest. */
+let logFileHeaderLen = 7;
+
 let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
   let convertedTime = getLocalDateTime(time);
 
@@ -222,7 +229,8 @@ let printPreviousRuns = outputPath => {
       getAllFiles([absPath]),
     );
 
-  let formatCommand = cmd => stripFirstAndLastFromString(cmd, 3, 1);
+  let formatCommand = cmd =>
+    stripFirstAndLastFromString(cmd, cmdHeaderLen, codeTagLen);
   let commands =
     List.map(m => formatCommand(readLineFromFile(m)), allMetadataFiles);
 
@@ -235,9 +243,6 @@ let printPreviousRuns = outputPath => {
 
   ();
 };
-
-/* I.e. every line up to lines of interest. */
-let logFileHeaderLen = 7;
 
 let getCurrentHeader = (path, config, logMsg) => {
   let currentLogFileLines = open_in(makeAbsolutePath(path));
