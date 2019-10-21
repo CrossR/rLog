@@ -41,6 +41,14 @@ let makeAbsolutePath = path =>
     path;
   };
 
+let makeRelativePath = (parentPath, path) => {
+  let parentLen = String.length(parentPath);
+  let pathLen = String.length(path);
+
+  /* We want to add one to the start loc to ignore the path seperator. */
+  String.sub(path, parentLen + 1, pathLen - parentLen - 1);
+};
+
 /* Create a folder with some sensible permissions. */
 let makeFolder = path => {
   Unix.mkdir(path, 0o755);
@@ -89,6 +97,19 @@ let writeFile = (path, stringList) => {
       };
 
   writeStringListToFile(fileOut, stringList);
+};
+
+let readLineFromFile = path => {
+  let file_input = open_in(path);
+  let line =
+    try (input_line(file_input)) {
+    | e =>
+      close_in_noerr(file_input);
+      raise(e);
+      "";
+    };
+
+  line;
 };
 
 let getMostRecentFromFolder = (path, shouldBeDirectory) => {

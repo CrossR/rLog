@@ -39,11 +39,7 @@ let argList = cliObj => {
       Arg.Unit(() => ()),
       " Link the passed data file(s) to the previous run.",
     ),
-    (
-      "list",
-      Arg.Unit(() => ()),
-      " List all the completed runs.",
-    ),
+    ("list", Arg.Unit(() => ()), " List all the completed runs."),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
     ("-R", Arg.Set(cliObj.recurse), " Recursively link files from folders."),
