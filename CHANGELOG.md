@@ -3,6 +3,7 @@
 #### Features
 
    - Add `-l` flag to link to older log files. (#35)
+   - Add `list` command, to list previous runs. (#37)
 
 ## v1.0.1
 

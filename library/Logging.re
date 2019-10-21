@@ -222,10 +222,6 @@ let printPreviousRuns = outputPath => {
       getAllFiles([absPath]),
     );
 
-  /* Get relative paths for pretty printing. */
-  let relativeMetadataFiles =
-    List.map(m => makeRelativePath(absPath, m), allMetadataFiles);
-
   let formatCommand = cmd => stripFirstAndLastFromString(cmd, 3, 1);
   let commands =
     List.map(m => formatCommand(readLineFromFile(m)), allMetadataFiles);
@@ -233,7 +229,7 @@ let printPreviousRuns = outputPath => {
   let _ =
     List.map2(
       (m, c) => Console.log(m ++ ": " ++ c),
-      relativeMetadataFiles,
+      allMetadataFiles,
       commands,
     );
 
