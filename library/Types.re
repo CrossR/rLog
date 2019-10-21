@@ -51,6 +51,7 @@ module Cli = {
     restOfCLI: ref(list(string)),
     mutable command: CommandType.t,
     enableOutputParsing: ref(bool),
+    linkToPreviousRun: ref(string),
   };
 
   let default = {
@@ -63,6 +64,7 @@ module Cli = {
     restOfCLI: ref([]),
     command: CommandType.Run,
     enableOutputParsing: ref(false),
+    linkToPreviousRun: ref(""),
   };
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "rLog",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A logging tool for scientific workflows",
   "esy": {
     "build": "pesy",

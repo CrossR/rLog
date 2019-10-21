@@ -77,11 +77,20 @@ let link = (args, logMsg) => {
 
   let replacedConfigCommands =
     CommandVariables.formatCommands(config.linkCommands, args, logMsg);
+
   config.linkCommands = replacedConfigCommands;
 
-  let latestLogFile = Logging.getLastLogFilePath(config.outputPath, logMsg);
+  // If the user gave a previous run, we should always overwrite.
+  args.force := args.linkToPreviousRun^ == "" ? args.force^ : true;
+
+  // If the user gave a previous run to link to, then use that. Otherwise, use the last run.
+  let selectedLogFile =
+    args.linkToPreviousRun^ != ""
+      ? Some(args.linkToPreviousRun^)
+      : Logging.getLastLogFilePath(config.outputPath, logMsg);
+
   let logFilePath =
-    switch (latestLogFile) {
+    switch (selectedLogFile) {
     | Some(path) => path
     | None => ""
     };
