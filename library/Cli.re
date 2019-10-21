@@ -39,6 +39,11 @@ let argList = cliObj => {
       Arg.Unit(() => ()),
       " Link the passed data file(s) to the previous run.",
     ),
+    (
+      "list",
+      Arg.Unit(() => ()),
+      " List all the completed runs.",
+    ),
     ("-h", Arg.Set(cliObj.showHelp), " Show this help text."),
     ("-v", Arg.Set(cliObj.verbose), " Enable verbose mode."),
     ("-R", Arg.Set(cliObj.recurse), " Recursively link files from folders."),
@@ -92,6 +97,7 @@ let isRun = cliObj => cliObj.command == Types.CommandType.Run;
 let isConfigGen = cliObj => cliObj.command == Types.CommandType.GenerateConfig;
 let isSearch = cliObj => cliObj.command == Types.CommandType.Search;
 let isLink = cliObj => cliObj.command == Types.CommandType.Link;
+let isList = cliObj => cliObj.command == Types.CommandType.ListRuns;
 
 let getArgs = () => {
   let cliObj = default;

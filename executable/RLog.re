@@ -46,6 +46,8 @@ let getArgsAndRun = () => {
     Config.makeDefaultConfig(args.configPath^);
   } else if (Cli.isLink(args)) {
     Runner.link(args, logMsg);
+  } else if (Cli.isList(args)) {
+    Runner.printPreviousRuns(args, logMsg);
   };
 
   exit(exitCode^);

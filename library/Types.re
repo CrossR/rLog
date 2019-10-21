@@ -27,7 +27,8 @@ module CommandType = {
     | Run
     | GenerateConfig
     | Link
-    | Search;
+    | Search
+    | ListRuns;
 
   let checkArg = str => {
     switch (str) {
@@ -35,6 +36,7 @@ module CommandType = {
     | "genconfig" => Some(GenerateConfig)
     | "search" => Some(Search)
     | "link" => Some(Link)
+    | "list" => Some(ListRuns)
     | _ => None
     };
   };

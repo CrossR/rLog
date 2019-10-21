@@ -211,6 +211,20 @@ let getLastLogFilePath = (logOutputPath, logMsg) => {
   };
 };
 
+/* Print out every previously ran command, to be grepped over. */
+let printPreviousRuns = (outputPath) => {
+  let absPath = makeAbsolutePath(outputPath);
+  checkFolderExists(absPath);
+
+  let allMetadataFiles = List.filter(
+    f => Str.string_match(Str.regexp({|.*meta\.log|}), f, 0), getAllFiles([absPath])
+  );
+
+  let _ = List.map(f => Console.log(f), allMetadataFiles);
+
+  ();
+}
+
 /* I.e. every line up to lines of interest. */
 let logFileHeaderLen = 7;
 
