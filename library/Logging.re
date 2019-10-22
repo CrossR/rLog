@@ -228,16 +228,26 @@ let printPreviousRuns = outputPath => {
       f => Str.string_match(Str.regexp({|.*meta\.log|}), f, 0),
       getAllFiles([absPath]),
     );
+  /* Get relative paths for pretty printing. */
+  let relativeMetadataFiles =
+    List.map(m => makeRelativePath(absPath, m), allMetadataFiles);
 
   let formatCommand = cmd =>
     stripFirstAndLastFromString(cmd, cmdHeaderLen, codeTagLen);
   let commands =
     List.map(m => formatCommand(readLineFromFile(m)), allMetadataFiles);
 
+  /* Print the location of the configuration first
+   * This lets a consumer either throw away this line
+   * Or use it to go from relative paths to absolute ones.
+   */
+  Console.log(absPath);
+
+  /* Then each of the files with the command in it. */
   let _ =
     List.map2(
       (m, c) => Console.log(m ++ ": " ++ c),
-      allMetadataFiles,
+      relativeMetadataFiles,
       commands,
     );
 
