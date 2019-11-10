@@ -10,6 +10,13 @@ open Util;
 open Types.Config;
 open Types.Command;
 
+/* Length of metadata header and code tag. */
+let cmdHeaderLen = 3;
+/* Length of closing header code tag. */
+let codeTagLen = 1;
+/* I.e. every line up to lines of interest. */
+let logFileHeaderLen = 7;
+
 let getLogFilePath = (~time=Unix.gettimeofday(), job, config) => {
   let convertedTime = getLocalDateTime(time);
 
@@ -211,8 +218,41 @@ let getLastLogFilePath = (logOutputPath, logMsg) => {
   };
 };
 
-/* I.e. every line up to lines of interest. */
-let logFileHeaderLen = 7;
+/* Print out every previously ran command, to be grepped over. */
+let printPreviousRuns = outputPath => {
+  let absPath = makeAbsolutePath(outputPath);
+  checkFolderExists(absPath);
+
+  let allMetadataFiles =
+    List.filter(
+      f => Str.string_match(Str.regexp({|.*meta\.log|}), f, 0),
+      getAllFiles([absPath]),
+    );
+  /* Get relative paths for pretty printing. */
+  let relativeMetadataFiles =
+    List.map(m => makeRelativePath(absPath, m), allMetadataFiles);
+
+  let formatCommand = cmd =>
+    stripFirstAndLastFromString(cmd, cmdHeaderLen, codeTagLen);
+  let commands =
+    List.map(m => formatCommand(readLineFromFile(m)), allMetadataFiles);
+
+  /* Print the location of the configuration first
+   * This lets a consumer either throw away this line
+   * Or use it to go from relative paths to absolute ones.
+   */
+  Console.log(absPath);
+
+  /* Then each of the files with the command in it. */
+  let _ =
+    List.map2(
+      (m, c) => Console.log(m ++ ": " ++ c),
+      relativeMetadataFiles,
+      commands,
+    );
+
+  ();
+};
 
 let getCurrentHeader = (path, config, logMsg) => {
   let currentLogFileLines = open_in(makeAbsolutePath(path));

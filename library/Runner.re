@@ -113,3 +113,13 @@ let link = (args, logMsg) => {
     Console.error("Could not find a metadata file to link to...");
   };
 };
+
+let printPreviousRuns = (args, logMsg) => {
+  let configPaths = getConfigPaths(args);
+  let config = Config.getConfig(configPaths, logMsg);
+
+  logMsg("Loading all files from " ++ config.outputPath);
+
+  Logging.printPreviousRuns(config.outputPath);
+  ();
+};

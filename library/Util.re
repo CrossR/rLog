@@ -96,3 +96,20 @@ let genRandomStr = length => {
   let gen = _ => String.make(1, char_of_int(gen()));
   String.concat("", Array.to_list(Array.init(length, gen)));
 };
+
+let stripFirstNChar = (str, ~n=1) =>
+  if (String.length(str) < n) {
+    str;
+  } else {
+    String.sub(str, n, String.length(str) - n);
+  };
+
+let stripLastNChar = (str, ~n=1) =>
+  if (String.length(str) < n) {
+    str;
+  } else {
+    String.sub(str, 0, String.length(str) - n);
+  };
+
+let stripFirstAndLastFromString = (str, first, last) =>
+  stripFirstNChar(str, ~n=first) |> stripLastNChar(~n=last);
