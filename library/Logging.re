@@ -166,13 +166,13 @@ let parseCmdOutput = (config, logFilePath) => {
   let linesOfInterest = ref([]);
 
   Stream.from(_ =>
-    try (Some(input_line(fileInput))) {
+    try(Some(input_line(fileInput))) {
     | End_of_file => None
     }
   )
   |> (
     stream =>
-      try (
+      try(
         Stream.iter(
           line => parseLine(i, line, linesOfInterest, config),
           stream,
@@ -269,13 +269,13 @@ let getCurrentHeader = (path, config, logMsg) => {
   };
 
   Stream.from(_ =>
-    try (Some(input_line(currentLogFileLines))) {
+    try(Some(input_line(currentLogFileLines))) {
     | End_of_file => None
     }
   )
   |> (
     stream =>
-      try (Stream.iter(line => getLines(i, line, headerLines), stream)) {
+      try(Stream.iter(line => getLines(i, line, headerLines), stream)) {
       | _error => close_in(currentLogFileLines)
       }
   );

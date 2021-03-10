@@ -59,7 +59,7 @@ let checkFolderExists = path => {
   let absPath = makeAbsolutePath(path);
 
   let folderStat =
-    try (Some(Unix.stat(absPath))) {
+    try(Some(Unix.stat(absPath))) {
     | Unix.Unix_error(_, _, _) => None
     };
 
@@ -102,7 +102,7 @@ let writeFile = (path, stringList) => {
 let readLineFromFile = path => {
   let file_input = open_in(path);
   let line =
-    try (input_line(file_input)) {
+    try(input_line(file_input)) {
     | e =>
       close_in_noerr(file_input);
       raise(e);
@@ -134,7 +134,7 @@ let getMostRecentFromFolder = (path, shouldBeDirectory) => {
 };
 
 let makeLink = (path, fileName) =>
-  try (Unix.symlink(path, fileName)) {
+  try(Unix.symlink(path, fileName)) {
   | Unix.Unix_error(Unix.EEXIST, command, _) =>
     Console.error("Failed to " ++ command ++ " due to file already existing!")
   | Unix.Unix_error(err, command, _) =>

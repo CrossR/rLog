@@ -57,7 +57,7 @@ let replaceGitRoot = commands => {
 let replaceOutputFile = (commands, outputFiles) => {
   let mapCommandToOutputs = (command, outputFiles) => {
     let matchPos =
-      try (Str.search_forward(outputFileRegex, command, 0)) {
+      try(Str.search_forward(outputFileRegex, command, 0)) {
       | Not_found => (-1)
       };
 

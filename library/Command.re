@@ -62,7 +62,7 @@ let runCmd = (~storeOutput=false, ~runSilently=false, ~logFile="", command) => {
       process_otl_aux();
     };
 
-    try (process_otl_aux()) {
+    try(process_otl_aux()) {
     | End_of_file =>
       let stat = Unix.close_process_in(inChannel);
       (commandOutput, stat);
