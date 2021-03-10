@@ -8,7 +8,7 @@ open Types.Cli;
 
 let missingCommand = "rLog must be called with -- followed by the command to be ran!";
 
-let helpText = {|rLog 1.0.2
+let helpText = {|rLog 1.1.0
 Ryan Cross <r.cross@lancaster.ac.uk>
 
 rLog is a CLI tool for logging the output of commands. Any command passed to

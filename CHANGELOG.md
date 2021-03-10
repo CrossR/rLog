@@ -1,3 +1,10 @@
+## v1.1.0
+
+#### Updates
+
+   - Bumped all dependencies up, fixed  up build.
+   - Incorporate other changes into new release.
+
 ## v1.0.2
 
 #### Features
