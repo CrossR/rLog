@@ -97,14 +97,14 @@ let genRandomStr = length => {
   String.concat("", Array.to_list(Array.init(length, gen)));
 };
 
-let stripFirstNChar = (str, ~n=1) =>
+let stripFirstNChar = (~n=1, str) =>
   if (String.length(str) < n) {
     str;
   } else {
     String.sub(str, n, String.length(str) - n);
   };
 
-let stripLastNChar = (str, ~n=1) =>
+let stripLastNChar = (~n=1, str) =>
   if (String.length(str) < n) {
     str;
   } else {
