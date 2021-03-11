@@ -3,8 +3,15 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+# Trigger on master branch
+trigger:
+- master
+
 pr:
   autoCancel: true
+  branches:
+    include:
+    - master
 
 name: $(Build.SourceVersion)
 jobs:
