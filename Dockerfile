@@ -5,7 +5,7 @@ RUN apk add --no-cache nodejs bash npm curl g++ make m4 patch gmp-dev perl git j
 USER root
 
 RUN npm -g config set user root
-RUN npm i -g esy@0.5.6
+RUN npm i -g esy@0.6.7
 
 WORKDIR /app
 ADD . /app

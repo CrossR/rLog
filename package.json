@@ -52,7 +52,6 @@
     "refmterr": "*"
   },
   "devDependencies": {
-    "ocaml": "4.10.0",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#966a28f"
+    "ocaml": "4.10.0"
   }
 }
